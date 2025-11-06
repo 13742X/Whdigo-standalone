@@ -234,10 +234,12 @@
                 margin-right: 10px;
                 border-radius: 4px;
             }
+
         .link {
             text-decoration: none;
             color: black;
         }
+
         .modal {
             display: none;
             position: fixed;
@@ -896,31 +898,61 @@
             }
 
             async function handleSave(mode = 'split') {
-                if (!appData || !masterPassword) { showToast('No data or password available to save.', 'error'); return; }
+                if (!appData || !masterPassword) {
+                    showToast('No data or password available to save.', 'error');
+                    return;
+                }
                 try {
                     const dataToSave = prepareDataForSaving();
                     const jsonData = JSON.stringify(dataToSave);
                     const newSalt = crypto.getRandomValues(new Uint8Array(16));
                     encryptionKey = await deriveKey(masterPassword, newSalt);
-                    const { ciphertext, iv } = await encryptData(encryptionKey, jsonData);
-                    const saltHex = bytesToHex(newSalt), ivHex = bytesToHex(iv);
+                    const {
+                        ciphertext,
+                        iv
+                    } = await encryptData(encryptionKey, jsonData);
+                    const saltHex = bytesToHex(newSalt),
+                        ivHex = bytesToHex(iv);
 
                     if (mode === 'combined') {
                         const payload = btoa(String.fromCharCode.apply(null, ciphertext));
-                        const combinedPacket = { type: 'combined', salt: saltHex, iv: ivHex, payload };
-                        downloadJson(combinedPacket, `whdigo-allpackets.json`);
+                        const combinedPacket = {
+                            type: 'combined',
+                            salt: saltHex,
+                            iv: ivHex,
+                            payload
+                        };
+                        await downloadJson(combinedPacket, `whdigo-allpackets.json`);
                         showToast('Data saved to a single combined file.');
                     } else {
                         const mid = Math.floor(ciphertext.byteLength / 2);
-                        const part1 = ciphertext.slice(0, mid), part2 = ciphertext.slice(mid);
-                        const packet1 = { part: 1, salt: saltHex, iv: ivHex, payload: btoa(String.fromCharCode.apply(null, new Uint8Array(part1))) };
-                        const packet2 = { part: 2, salt: saltHex, iv: ivHex, payload: btoa(String.fromCharCode.apply(null, new Uint8Array(part2))) };
-                        downloadJson(packet1, `whdigo-packet1.json`);
-                        downloadJson(packet2, `whdigo-packet2.json`);
+                        const part1 = ciphertext.slice(0, mid),
+                            part2 = ciphertext.slice(mid);
+                        const packet1 = {
+                            part: 1,
+                            salt: saltHex,
+                            iv: ivHex,
+                            payload: btoa(String.fromCharCode.apply(null, new Uint8Array(part1)))
+                        };
+                        const packet2 = {
+                            part: 2,
+                            salt: saltHex,
+                            iv: ivHex,
+                            payload: btoa(String.fromCharCode.apply(null, new Uint8Array(part2)))
+                        };
+                        await downloadJson(packet1, `whdigo-packet1.json`);
+                        await downloadJson(packet2, `whdigo-packet2.json`);
                         showToast('Data saved to two split packets.');
                     }
-                } catch (error) { console.error('Save failed:', error); showToast('Failed to save data.', 'error'); }
+                } catch (error) {
+                    console.error('Save failed:', error);
+                    // Don't show an error toast if the user just cancelled the save dialog
+                    if (error.name !== 'AbortError') {
+                        showToast('Failed to save data.', 'error');
+                    }
+                }
             }
+
 
             function initMainApp(promptToCache = false) {
                 $('#unlock-container').style.display = 'none';
@@ -1003,7 +1035,39 @@
             function deriveKey(password, salt) { const enc = new TextEncoder(); return crypto.subtle.importKey('raw', enc.encode(password), { name: 'PBKDF2' }, false, ['deriveKey']).then(baseKey => crypto.subtle.deriveKey({ name: 'PBKDF2', salt, iterations: 100000, hash: 'SHA-256' }, baseKey, { name: 'AES-GCM', length: 256 }, true, ["encrypt", "decrypt"])); }
             async function encryptData(key, jsonData) { const iv = crypto.getRandomValues(new Uint8Array(12)); const ciphertext = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, new TextEncoder().encode(jsonData)); return { ciphertext: new Uint8Array(ciphertext), iv }; }
             async function decryptData(key, { ciphertext, iv }) { const decrypted = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, ciphertext); return new TextDecoder().decode(decrypted); }
-            function downloadJson(data, filename) { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })); a.download = filename; a.click(); URL.revokeObjectURL(a.href); }
+
+            async function downloadJson(data, filename) {
+                const blob = new Blob([JSON.stringify(data, null, 2)], {
+                    type: 'application/json'
+                });
+
+                // Use the File System Access API if available
+                if (window.showSaveFilePicker) {
+                    const options = {
+                        suggestedName: filename,
+                        types: [{
+                            description: 'JSON Files',
+                            accept: {
+                                'application/json': ['.json'],
+                            },
+                        }, ],
+                    };
+                    const handle = await window.showSaveFilePicker(options);
+                    const writable = await handle.createWritable();
+                    await writable.write(blob);
+                    await writable.close();
+                } else {
+                    // Fallback for older browsers
+                    const a = document.createElement('a');
+                    a.href = URL.createObjectURL(blob);
+                    a.download = filename;
+                    document.body.appendChild(a); // Required for Firefox
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(a.href);
+                }
+            }
+
             function bytesToHex(bytes) { return Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join(''); }
             function hexToBytes(hex) { const bytes = new Uint8Array(hex.length / 2); for (let i = 0; i < hex.length; i += 2) bytes[i / 2] = parseInt(hex.substr(i, 2), 16); return bytes; }
             function showToast(message, type = 'success') { const toast = document.createElement('div'); toast.className = `toast ${type}`; toast.textContent = message; $('#toast-container').appendChild(toast); setTimeout(() => toast.remove(), 4000); }
