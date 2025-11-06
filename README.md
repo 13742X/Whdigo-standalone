@@ -53,6 +53,7 @@ Data is encrypted using **AES-256-GCM** (industry-standard authenticated encrypt
 |----------|--------------|
 | **Encryption** | AES-256-GCM with PBKDF2 key derivation (100,000 iterations) |
 | **Password Handling** | Master password never leaves memory; not stored anywhere |
+| **In Memory Only** | Unless selected, no data is cached in cookies or localstorage|
 | **Data Model** | All data encrypted into JSON packets |
 | **Split File Mode** | Data is divided into two halves requiring both to decrypt |
 | **Offline Execution** | 100% client-side JavaScript; no network requests |
