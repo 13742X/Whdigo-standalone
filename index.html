@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,43 +7,580 @@
     <meta name="theme-color" content="#ffffff">
     <link rel="manifest" href="manifest.json" onerror="console.warn('Manifest not found, continuing offline')">
     <title>WHDIGO Ultra Secure Password Manager</title>
-    <style>:root{--primary-color:#007bff;--secondary-color:#6c757d;--success-color:#28a745;--danger-color:#dc3545;--light-bg:#f8f9fa;--dark-bg:#212529;--light-text:#212529;--dark-text:#f8f9fa;--light-border:#dee2e6;--dark-border:#495057;--light-card:#ffffff;--dark-card:#343a40}*,*::before,*::after{box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;margin:0;background-color:var(--light-bg);color:var(--light-text);transition:background-color .3s,color .3s}body.dark-mode{--light-bg:#212529;--dark-bg:#f8f9fa;--light-text:#f8f9fa;--dark-text:#212529;--light-border:#495057;--dark-border:#dee2e6;--light-card:#343a40;--dark-card:#ffffff}.container{max-width:768px;margin:2rem auto;padding:1rem}.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem}.logo{width:150px}.card{padding:1.5rem;background-color:var(--light-card);border:1px solid var(--light-border);border-radius:8px;box-shadow:0 4px 6px rgba(0,0,0,.05)}.form-group{margin-bottom:1.25rem}label{display:block;margin-bottom:.5rem;font-weight:500}input,textarea,select{width:100%;padding:.75rem;border:1px solid var(--light-border);border-radius:4px;background-color:var(--light-card);color:var(--light-text);font-size:1rem}button{padding:.75rem 1.5rem;border:none;border-radius:4px;background-color:var(--primary-color);color:white;cursor:pointer;font-size:1rem;font-weight:500;transition:opacity .2s}button:hover{opacity:.9}button:disabled{background-color:var(--secondary-color);cursor:not-allowed;opacity:.7}button.secondary{background-color:var(--secondary-color)}button.danger{background-color:var(--danger-color)}.icon-btn,.table-action-btn{background-color:transparent;border:none;padding:.5rem;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:background-color .2s}button.icon-btn,button.icon-btn.secondary,button.icon-btn.danger{background-color:transparent}button.icon-btn:hover,.table-action-btn:hover{background-color:rgba(0,0,0,.05);opacity:1}.icon-btn svg{width:24px;height:24px;stroke:var(--primary-color)}.icon-btn.secondary svg{stroke:var(--secondary-color)}.icon-btn.danger svg{stroke:var(--danger-color)}.table-action-btn svg{width:18px;height:18px;stroke:var(--secondary-color)}.table-action-btn.delete svg{stroke:var(--danger-color)}.button-group{display:flex;gap:.5rem}.tab-nav{border-bottom:1px solid var(--light-border);margin-bottom:1.5rem}.tab-button{background:none;border:none;padding:1rem;color:var(--secondary-color);font-size:1rem;cursor:pointer}.tab-button.active{color:var(--primary-color);border-bottom:3px solid var(--primary-color);font-weight:600}.tab-content{display:none}.tab-content.active{display:block}.form-grid{display:grid;grid-template-columns:1fr;gap:1rem}@media (min-width:600px){.form-grid{grid-template-columns:1fr 1fr;gap:2rem}}table{width:100%;border-collapse:collapse}th,td{padding:.75rem;text-align:left;border-bottom:1px solid var(--light-border);vertical-align:middle}td img{width:32px;height:32px;vertical-align:middle;margin-right:10px;border-radius:4px}.modal{position:fixed;z-index:1000;left:0;top:0;width:100%;height:100%;overflow:auto;background-color:rgba(0,0,0,.6);backdrop-filter:blur(5px)}.modal-content{background-color:var(--light-card);margin:10% auto;padding:20px;border:1px solid #888;width:90%;max-width:500px;border-radius:8px;animation:slide-down .3s ease-out}@keyframes slide-down{from{transform:translateY(-30px);opacity:0}to{transform:translateY(0);opacity:1}}.modal-header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--light-border);padding-bottom:1rem;margin-bottom:1rem}.close-button{color:#aaa;font-size:28px;font-weight:bold;cursor:pointer}#toast-container{position:fixed;bottom:20px;right:20px;z-index:2000}.toast{background-color:var(--success-color);color:white;padding:1rem;border-radius:4px;margin-bottom:.5rem;box-shadow:0 2px 10px rgba(0,0,0,.2);animation:fade-in .3s}@keyframes fade-in{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}.toast.error{background-color:var(--danger-color)}#burger-menu-btn{z-index:1002}#nav-menu{position:fixed;top:0;right:-300px;width:300px;height:100%;background-color:var(--light-card);box-shadow:-2px 0 5px rgba(0,0,0,.1);transition:right .3s ease-in-out;z-index:1001;padding:60px 20px 20px}#nav-menu.open{right:0}.nav-item{padding:1rem 0;border-bottom:1px solid var(--light-border)}.theme-switch-wrapper{display:flex;align-items:center;justify-content:space-between}.theme-switch{display:inline-block;height:24px;position:relative;width:48px}.theme-switch input{display:none}.slider{background-color:#ccc;bottom:0;cursor:pointer;left:0;position:absolute;right:0;top:0;transition:.4s}.slider:before{background-color:#fff;bottom:4px;content:"";height:16px;left:4px;position:absolute;transition:.4s;width:16px}input:checked+.slider{background-color:var(--primary-color)}input:checked+.slider:before{transform:translateX(24px)}.slider.round{border-radius:34px}.slider.round:before{border-radius:50%}#help-content{display:none;margin-top:1rem;font-size:.9em}#help-content.show{display:block}#help-content ul{padding-left:20px}#drop-area{border:2px dashed var(--light-border);border-radius:8px;padding:2rem;text-align:center;color:var(--secondary-color);transition:border-color .3s,background-color .3s;cursor:pointer}#drop-area.highlight{border-color:var(--primary-color);background-color:rgba(0,123,255,.05)}#file-list{margin-top:1rem;text-align:left}.file-item{background-color:rgba(0,0,0,.05);padding:.5rem;border-radius:4px;margin-bottom:.5rem}#pagination-controls{display:flex;justify-content:center;align-items:center;gap:1rem;margin-top:1.5rem}.calendar-month{margin-bottom:1.5rem}.calendar-month h3{border-bottom:1px solid var(--light-border);padding-bottom:.5rem}.calendar-entry{display:flex;justify-content:space-between;padding:.5rem;border-radius:4px}.calendar-entry:nth-child(even){background-color:rgba(0,0,0,.02)}body.dark-mode .calendar-entry:nth-child(even){background-color:rgba(255,255,255,.05)}.entry-start{color:var(--success-color);font-weight:500}.entry-end{color:var(--danger-color);font-weight:500}#unlock-container{max-width:550px;margin:2rem auto}#unlock-container h1,#unlock-container>p:first-of-type{text-align:center}.upload-mode-container{display:grid;grid-template-columns:1fr 1fr;gap:1rem;padding:.5rem 0}.radio-option-label{display:flex;align-items:center;gap:12px;font-weight:500;cursor:pointer}.radio-option-label input[type=radio]{display:none}.radio-custom{width:20px;height:20px;border:2px solid var(--secondary-color);border-radius:50%;display:inline-block;position:relative;flex-shrink:0;transition:border-color .2s}.radio-option-label input[type=radio]:checked+.radio-custom{border-color:var(--primary-color)}.radio-option-label input[type=radio]:checked+.radio-custom::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:10px;height:10px;border-radius:50%;background-color:var(--primary-color)}.radio-text{line-height:1.4}.divider{border:0;height:1px;background:var(--light-border);margin:1.25rem 0}.hidden{display:none!important}.w-100{width:100%}.mt-0-5{margin-top:.5rem}.mt-1{margin-top:1rem}.mt-1-25{margin-top:1.25rem}.mt-1-5{margin-top:1.5rem}.text-center{text-align:center}.text-right{text-align:right}.text-primary{color:var(--primary-color)}.text-danger{color:var(--danger-color)}.text-light{color:var(--light-text)}.no-underline{text-decoration:none}.d-block{display:block}.justify-end{justify-content:flex-end}.header-actions{display:flex;align-items:center;gap:.5rem}.header-icon-link{color:var(--light-text);text-decoration:none;display:inline-flex;align-items:center;justify-content:center}.header-icon-link svg{transition:opacity .2s}.header-icon-link:hover{opacity:.7}.header-svg{width:28px;height:28px}
+    <style>
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --light-bg: #f8f9fa;
+            --dark-bg: #212529;
+            --light-text: #212529;
+            --dark-text: #f8f9fa;
+            --light-border: #dee2e6;
+            --dark-border: #495057;
+            --light-card: #ffffff;
+            --dark-card: #343a40;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            background-color: var(--light-bg);
+            color: var(--light-text);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+            body.dark-mode {
+                --light-bg: #212529;
+                --dark-bg: #f8f9fa;
+                --light-text: #f8f9fa;
+                --dark-text: #212529;
+                --light-border: #495057;
+                --dark-border: #dee2e6;
+                --light-card: #343a40;
+                --dark-card: #ffffff;
+            }
+
+        .container {
+            max-width: 768px;
+            margin: 2rem auto;
+            padding: 1rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .logo {
+            width: 150px;
+        }
+
+        .card {
+            padding: 1.5rem;
+            background-color: var(--light-card);
+            border: 1px solid var(--light-border);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--light-border);
+            border-radius: 4px;
+            background-color: var(--light-card);
+            color: var(--light-text);
+            font-size: 1rem;
+        }
+
+        button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            background-color: var(--primary-color);
+            color: white;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: opacity 0.2s;
+        }
+
+            button:hover {
+                opacity: 0.9;
+            }
+
+            button:disabled {
+                background-color: var(--secondary-color);
+                cursor: not-allowed;
+                opacity: 0.7;
+            }
+
+            button.secondary {
+                background-color: var(--secondary-color);
+            }
+
+            button.danger {
+                background-color: var(--danger-color);
+            }
+
+        /* --- ICON BUTTON STYLE FIXES START --- */
+        .icon-btn, .table-action-btn {
+            background-color: transparent;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        /* Override general button styles for icon buttons */
+        button.icon-btn, button.icon-btn.secondary, button.icon-btn.danger {
+            background-color: transparent;
+        }
+
+            button.icon-btn:hover, .table-action-btn:hover {
+                background-color: rgba(0,0,0,0.05);
+                opacity: 1;
+            }
+
+        .icon-btn svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--primary-color); /* Default for 'add' */
+        }
+
+        .icon-btn.secondary svg {
+            stroke: var(--secondary-color);
+        }
+
+        .icon-btn.danger svg {
+            stroke: var(--danger-color);
+        }
+
+        .table-action-btn svg {
+            width: 18px;
+            height: 18px;
+            stroke: var(--secondary-color);
+        }
+
+        .table-action-btn.delete svg {
+            stroke: var(--danger-color);
+        }
+        /* --- ICON BUTTON STYLE FIXES END --- */
+
+
+        .button-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .tab-nav {
+            border-bottom: 1px solid var(--light-border);
+            margin-bottom: 1.5rem;
+        }
+
+        .tab-button {
+            background: none;
+            border: none;
+            padding: 1rem;
+            color: var(--secondary-color);
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+            .tab-button.active {
+                color: var(--primary-color);
+                border-bottom: 3px solid var(--primary-color);
+                font-weight: 600;
+            }
+
+        .tab-content {
+            display: none;
+        }
+
+            .tab-content.active {
+                display: block;
+            }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        @media (min-width: 600px) {
+            .form-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 2rem;
+            }
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--light-border);
+            vertical-align: middle;
+        }
+
+            td img {
+                width: 32px;
+                height: 32px;
+                vertical-align: middle;
+                margin-right: 10px;
+                border-radius: 4px;
+            }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.6);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: var(--light-card);
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 8px;
+            animation: slide-down 0.3s ease-out;
+        }
+
+        @keyframes slide-down {
+            from {
+                transform: translateY(-30px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--light-border);
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .close-button {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 2000;
+        }
+
+        .toast {
+            background-color: var(--success-color);
+            color: white;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            animation: fade-in 0.3s;
+        }
+
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .toast.error {
+            background-color: var(--danger-color);
+        }
+
+        #burger-menu-btn {
+            z-index: 1002;
+        }
+
+        #nav-menu {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 300px;
+            height: 100%;
+            background-color: var(--light-card);
+            box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+            transition: right 0.3s ease-in-out;
+            z-index: 1001;
+            padding: 60px 20px 20px;
+        }
+
+            #nav-menu.open {
+                right: 0;
+            }
+
+        .nav-item {
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--light-border);
+        }
+
+        .theme-switch-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .theme-switch {
+            display: inline-block;
+            height: 24px;
+            position: relative;
+            width: 48px;
+        }
+
+            .theme-switch input {
+                display: none;
+            }
+
+        .slider {
+            background-color: #ccc;
+            bottom: 0;
+            cursor: pointer;
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            transition: .4s;
+        }
+
+            .slider:before {
+                background-color: #fff;
+                bottom: 4px;
+                content: "";
+                height: 16px;
+                left: 4px;
+                position: absolute;
+                transition: .4s;
+                width: 16px;
+            }
+
+        input:checked + .slider {
+            background-color: var(--primary-color);
+        }
+
+            input:checked + .slider:before {
+                transform: translateX(24px);
+            }
+
+        .slider.round {
+            border-radius: 34px;
+        }
+
+            .slider.round:before {
+                border-radius: 50%;
+            }
+
+        #help-content {
+            display: none;
+            margin-top: 1rem;
+            font-size: 0.9em;
+        }
+
+            #help-content.show {
+                display: block;
+            }
+
+            #help-content ul {
+                padding-left: 20px;
+            }
+
+        #drop-area {
+            border: 2px dashed var(--light-border);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            color: var(--secondary-color);
+            transition: border-color 0.3s, background-color 0.3s;
+            cursor: pointer;
+        }
+
+            #drop-area.highlight {
+                border-color: var(--primary-color);
+                background-color: rgba(0, 123, 255, 0.05);
+            }
+
+        #file-list {
+            margin-top: 1rem;
+            text-align: left;
+        }
+
+        .file-item {
+            background-color: rgba(0,0,0,0.05);
+            padding: 0.5rem;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+        }
+
+        #pagination-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .calendar-month {
+            margin-bottom: 1.5rem;
+        }
+
+            .calendar-month h3 {
+                border-bottom: 1px solid var(--light-border);
+                padding-bottom: 0.5rem;
+            }
+
+        .calendar-entry {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem;
+            border-radius: 4px;
+        }
+
+            .calendar-entry:nth-child(even) {
+                background-color: rgba(0,0,0,0.02);
+            }
+
+        body.dark-mode .calendar-entry:nth-child(even) {
+            background-color: rgba(255,255,255,0.05);
+        }
+
+        .entry-start {
+            color: var(--success-color);
+            font-weight: 500;
+        }
+
+        .entry-end {
+            color: var(--danger-color);
+            font-weight: 500;
+        }
+
+        #unlock-container {
+            max-width: 550px;
+            margin: 2rem auto;
+        }
+
+            #unlock-container h1, #unlock-container > p:first-of-type {
+                text-align: center;
+            }
+
+        .upload-mode-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            padding: 0.5rem 0;
+        }
+
+        .radio-option-label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+            .radio-option-label input[type="radio"] {
+                display: none;
+            }
+
+        .radio-custom {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--secondary-color);
+            border-radius: 50%;
+            display: inline-block;
+            position: relative;
+            flex-shrink: 0;
+            transition: border-color 0.2s;
+        }
+
+        .radio-option-label input[type="radio"]:checked + .radio-custom {
+            border-color: var(--primary-color);
+        }
+
+            .radio-option-label input[type="radio"]:checked + .radio-custom::after {
+                content: '';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                background-color: var(--primary-color);
+            }
+
+        .radio-text {
+            line-height: 1.4;
+        }
+
+        .divider {
+            border: 0;
+            height: 1px;
+            background: var(--light-border);
+            margin: 1.25rem 0;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
             <img src="https://app.whdigo.com/icons/whdigo-words-transparent.png" alt="Logo" class="logo">
-            <div class="header-actions">
-                <a href="https://github.com/13742X/Whdigo-standalone/blob/main/README.md" target="_blank" rel="noopener noreferrer" class="header-icon-link" aria-label="View Source Code">
-                    <svg class="header-svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 15" /></svg>
-                </a>
-                <button id="burger-menu-btn" class="icon-btn"></button>
-            </div>
+            <button id="burger-menu-btn" class="icon-btn"></button>
         </div>
 
         <nav id="nav-menu">
-            <div id="main-nav-items" class="hidden">
-                <div class="nav-item"><button id="save-combined-btn" class="w-100">Save Combined File</button></div>
-                <div class="nav-item"><button id="save-split-btn" class="w-100 secondary">Save Split Packets</button></div>
-                <div class="nav-item"><button id="clear-cache-btn" class="w-100 danger">Clear Local Cache</button></div>
+            <div id="main-nav-items" style="display: none;">
+                <div class="nav-item"><button id="save-combined-btn" style="width: 100%;">Save Combined File</button></div>
+                <div class="nav-item"><button id="save-split-btn" style="width: 100%;" class="secondary">Save Split Packets</button></div>
+                <div class="nav-item"><button id="clear-cache-btn" style="width: 100%;" class="danger">Clear Local Cache</button></div>
             </div>
             <div class="nav-item">
                 <div class="theme-switch-wrapper"><span>Dark Mode</span><label class="theme-switch" for="theme-toggle"><input type="checkbox" id="theme-toggle"><span class="slider round"></span></label></div>
             </div>
             <div class="nav-item">
-                <a href="#" id="help-link" class="text-light no-underline d-block">Help</a>
+                <a href="#" id="help-link" style="color: var(--light-text); text-decoration: none; display: block;">Help</a>
                 <div id="help-content"><h4>About Security</h4><ul><li><strong>Master Password:</strong> Your data is encrypted with a key derived from this password. It is never stored.</li><li><strong>Local Cache:</strong> Data can be cached in your browser for convenience. It remains fully encrypted with your Master Password.</li><li><strong>AES-256-GCM Encryption:</strong> Industry-standard authenticated encryption ensures both confidentiality and integrity of your data.</li><li><strong>Split-File Storage:</strong> Saving as Split Packets provides maximum security. An attacker needs your password AND both files.</li><li><strong>No Server Storage:</strong> Your data is never sent to a server. It stays in your browser and the files you save.</li></ul></div>
             </div>
         </nav>
 
         <div id="unlock-container" class="card">
-            <div id="cached-unlock-view" class="hidden">
+            <div id="cached-unlock-view" style="display: none;">
                 <h1>Unlock Cached Data</h1>
                 <p>Enter your master password to decrypt the locally stored data.</p>
                 <div class="form-group"><label for="master-password-cache">Master Password</label><input type="password" id="master-password-cache" placeholder="Enter password to unlock cache"></div>
-                <button id="unlock-cache-btn" class="w-100">Unlock</button>
-                <p class="text-center mt-1">or <a href="#" id="start-over-link" class="text-primary">load from file instead</a>.</p>
+                <button id="unlock-cache-btn" style="width: 100%;">Unlock</button>
+                <p style="text-align: center; margin-top: 1rem;">or <a href="#" id="start-over-link" style="color: var(--primary-color);">load from file instead</a>.</p>
             </div>
             <div id="initial-load-view">
                 <h1>Secure Data Mapper</h1>
@@ -52,11 +590,11 @@
                         <button id="new-store-btn">Create New Secure Store</button>
                         <button id="load-store-btn" class="secondary">Load Existing Store</button>
                     </div>
-                    <div class="form-grid mt-1">
+                    <div class="form-grid" style="margin-top: 1rem;">
                         <button id="sync-btn" title="Not Recommended" disabled>Sync to Server</button>
                     </div>
                 </div>
-                <div id="load-form-container" class="hidden">
+                <div id="load-form-container" style="display: none;">
                     <div class="form-group"><label for="master-password">Master Password</label><input type="password" id="master-password" placeholder="Enter the password for your store"></div>
                     <div class="form-group">
                         <label>Upload Mode</label>
@@ -66,26 +604,26 @@
                         </div>
                     </div>
                     <hr class="divider">
-                    <input type="file" id="file-input" multiple class="hidden">
-                    <div id="drop-area"><p id="drop-area-text">Drag & Drop Your 2 Secure Data Files Here</p><p>or <a href="#" id="browse-files-link" class="text-primary">browse your device</a></p></div>
+                    <input type="file" id="file-input" multiple style="display: none;">
+                    <div id="drop-area"><p id="drop-area-text">Drag & Drop Your 2 Secure Data Files Here</p><p>or <a href="#" id="browse-files-link" style="color: var(--primary-color);">browse your device</a></p></div>
                     <div id="file-list"></div>
-                    <button id="unlock-btn" class="w-100 mt-1-25">Unlock Data</button>
+                    <button id="unlock-btn" style="width:100%; margin-top: 1.25rem;">Unlock Data</button>
                 </div>
             </div>
-            <p id="unlock-message" class="text-center text-danger mt-1"></p>
+            <p id="unlock-message" style="text-align:center; color: var(--danger-color); margin-top: 1rem;"></p>
         </div>
 
-        <div id="main-app" class="card hidden">
+        <div id="main-app" class="card" style="display: none;">
             <div class="tab-nav"><button class="tab-button active" data-tab="setup">Setup</button><button class="tab-button" data-tab="mappings">Mappings</button><button class="tab-button" data-tab="calendar">Calendar</button></div>
             <div id="setup-content" class="tab-content active">
                 <div class="form-grid">
-                    <div class="form-group"><label for="app-search">Application</label><input type="text" id="app-search" placeholder="Search Apps..."><select id="app-select" size="5"></select><div class="button-group mt-0-5"><button id="add-app-btn" title="Add New Application" class="icon-btn"></button><button id="edit-app-btn" class="icon-btn secondary" title="Edit Selected"></button><button id="delete-app-btn" class="icon-btn danger" title="Delete Selected"></button></div></div>
-                    <div class="form-group"><label for="signon-search">Sign-On Method</label><input type="text" id="signon-search" placeholder="Search Sign-On..."><select id="signon-select" size="5"></select><div class="button-group mt-0-5"><button id="add-signon-btn" title="Add New Sign-On" class="icon-btn"></button><button id="edit-signon-btn" class="icon-btn secondary" title="Edit Selected"></button><button id="delete-signon-btn" class="icon-btn danger" title="Delete Selected"></button></div></div>
-                </div><button id="map-button" class="w-100 mt-1-5">Create Mapping</button>
+                    <div class="form-group"><label for="app-search">Application</label><input type="text" id="app-search" placeholder="Search Apps..."><select id="app-select" size="5"></select><div class="button-group" style="margin-top: 0.5rem;"><button id="add-app-btn" title="Add New Application" class="icon-btn"></button><button id="edit-app-btn" class="icon-btn secondary" title="Edit Selected"></button><button id="delete-app-btn" class="icon-btn danger" title="Delete Selected"></button></div></div>
+                    <div class="form-group"><label for="signon-search">Sign-On Method</label><input type="text" id="signon-search" placeholder="Search Sign-On..."><select id="signon-select" size="5"></select><div class="button-group" style="margin-top: 0.5rem;"><button id="add-signon-btn" title="Add New Sign-On" class="icon-btn"></button><button id="edit-signon-btn" class="icon-btn secondary" title="Edit Selected"></button><button id="delete-signon-btn" class="icon-btn danger" title="Delete Selected"></button></div></div>
+                </div><button id="map-button" style="width: 100%; margin-top: 1.5rem;">Create Mapping</button>
             </div>
             <div id="mappings-content" class="tab-content">
                 <h2>Existing Mappings</h2><div class="form-group"><input type="text" id="table-search" placeholder="Search mappings by app, sign-on, tags or comments..."></div>
-                <table id="mapping-table"><thead><tr><th>Logo</th><th>Application</th><th>Sign-On Method</th><th class="text-right">Actions</th></tr></thead><tbody></tbody></table>
+                <table id="mapping-table"><thead><tr><th>Logo</th><th>Application</th><th>Sign-On Method</th><th style="text-align: right;">Actions</th></tr></thead><tbody></tbody></table>
                 <div id="pagination-controls"></div>
             </div>
             <div id="calendar-content" class="tab-content">
@@ -94,13 +632,361 @@
         </div>
     </div>
 
-    <div id="app-modal" class="modal hidden"><div class="modal-content"><div class="modal-header"><h2 id="app-modal-title">Application</h2><span class="close-button">&times;</span></div><input type="hidden" id="app-id"><div class="form-group"><label for="app-name">App Name</label><input type="text" id="app-name"></div><div class="form-group"><label for="app-url">App URL</label><input type="url" id="app-url"></div><div class="form-group"><label for="app-logo-url">App Logo URL</label><input type="url" id="app-logo-url"></div><button id="save-app-btn">Save</button></div></div>
-    <div id="signon-modal" class="modal hidden"><div class="modal-content"><div class="modal-header"><h2 id="signon-modal-title">Sign-On Method</h2><span class="close-button">&times;</span></div><input type="hidden" id="signon-id"><div class="form-group"><label for="signon-name">Sign-On Name</label><input type="text" id="signon-name"></div><button id="save-signon-btn">Save</button></div></div>
-    <div id="edit-mapping-modal" class="modal hidden"><div class="modal-content"><div class="modal-header"><h2>Edit Mapping</h2><span class="close-button">&times;</span></div><input type="hidden" id="edit-mapping-id"><div class="form-grid"><div class="form-group"><label for="edit-start-date">Start Date</label><input type="date" id="edit-start-date"></div><div class="form-group"><label for="edit-end-date">End Date (optional)</label><input type="date" id="edit-end-date"></div></div><div class="form-group"><label for="edit-tags">Tags (comma separated)</label><input type="text" id="edit-tags"></div><div class="form-group"><label for="edit-comments">Comments</label><textarea id="edit-comments" rows="3"></textarea></div><button id="save-mapping-changes-btn">Save Changes</button></div></div>
-    <div id="new-password-modal" class="modal hidden"><div class="modal-content"><div class="modal-header"><h2>Create Master Password</h2></div><p>This password will be used to encrypt your data. <strong>It cannot be recovered if you forget it.</strong></p><div class="form-group"><label for="new-master-password">New Master Password</label><input type="password" id="new-master-password"></div><button id="set-password-btn">Set Password & Create Store</button></div></div>
-    <div id="confirm-modal" class="modal hidden"><div class="modal-content"><h2 id="confirm-title">Are you sure?</h2><p id="confirm-message"></p><div class="button-group justify-end"><button id="confirm-cancel-btn" class="secondary">Cancel</button><button id="confirm-ok-btn" class="danger">Confirm</button></div></div></div>
+    <div id="app-modal" class="modal"><div class="modal-content"><div class="modal-header"><h2 id="app-modal-title">Application</h2><span class="close-button">&times;</span></div><input type="hidden" id="app-id"><div class="form-group"><label for="app-name">App Name</label><input type="text" id="app-name"></div><div class="form-group"><label for="app-url">App URL</label><input type="url" id="app-url"></div><div class="form-group"><label for="app-logo-url">App Logo URL</label><input type="url" id="app-logo-url"></div><button id="save-app-btn">Save</button></div></div>
+    <div id="signon-modal" class="modal"><div class="modal-content"><div class="modal-header"><h2 id="signon-modal-title">Sign-On Method</h2><span class="close-button">&times;</span></div><input type="hidden" id="signon-id"><div class="form-group"><label for="signon-name">Sign-On Name</label><input type="text" id="signon-name"></div><button id="save-signon-btn">Save</button></div></div>
+    <div id="edit-mapping-modal" class="modal"><div class="modal-content"><div class="modal-header"><h2>Edit Mapping</h2><span class="close-button">&times;</span></div><input type="hidden" id="edit-mapping-id"><div class="form-grid"><div class="form-group"><label for="edit-start-date">Start Date</label><input type="date" id="edit-start-date"></div><div class="form-group"><label for="edit-end-date">End Date (optional)</label><input type="date" id="edit-end-date"></div></div><div class="form-group"><label for="edit-tags">Tags (comma separated)</label><input type="text" id="edit-tags"></div><div class="form-group"><label for="edit-comments">Comments</label><textarea id="edit-comments" rows="3"></textarea></div><button id="save-mapping-changes-btn">Save Changes</button></div></div>
+    <div id="new-password-modal" class="modal"><div class="modal-content"><div class="modal-header"><h2>Create Master Password</h2></div><p>This password will be used to encrypt your data. <strong>It cannot be recovered if you forget it.</strong></p><div class="form-group"><label for="new-master-password">New Master Password</label><input type="password" id="new-master-password"></div><button id="set-password-btn">Set Password & Create Store</button></div></div>
+    <div id="confirm-modal" class="modal"><div class="modal-content"><h2 id="confirm-title">Are you sure?</h2><p id="confirm-message"></p><div class="button-group" style="justify-content: flex-end;"><button id="confirm-cancel-btn" class="secondary">Cancel</button><button id="confirm-ok-btn" class="danger">Confirm</button></div></div></div>
     <div id="toast-container"></div>
 
-    <script>document.addEventListener("DOMContentLoaded",(()=>{let e=null,t=null,n="",o=new Date().getFullYear(),a=[],i=1;const l=10,s="whdigo_secure_cache",c={burger:'<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" /></svg>',plus:'<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>',edit:'<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" /></svg>',trash:'<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" /></svg>',leftArrow:'<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" /></svg>',rightArrow:'<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" /></svg>'},r=e=>document.querySelector(e),d=e=>document.querySelectorAll(e);function u(){(()=>{if(localStorage.getItem(s)){r("#initial-load-view").classList.add("hidden");r("#cached-unlock-view").classList.remove("hidden")}else{r("#initial-load-view").classList.remove("hidden");r("#cached-unlock-view").classList.add("hidden")}})(),(()=>{r("#new-store-btn").addEventListener("click",(()=>r("#new-password-modal").classList.remove("hidden")));r("#set-password-btn").addEventListener("click",h);r("#load-store-btn").addEventListener("click",(()=>{r("#initial-choice-container").classList.add("hidden"),r("#load-form-container").classList.remove("hidden")}));r("#unlock-btn").addEventListener("click",p);r("#unlock-cache-btn").addEventListener("click",g);r("#start-over-link").addEventListener("click",(e=>{e.preventDefault(),m()}));const e=r("#nav-menu");r("#burger-menu-btn").addEventListener("click",(t=>{t.stopPropagation(),e.classList.toggle("open")}));document.body.addEventListener("click",(t=>{e.contains(t.target)||r("#burger-menu-btn").contains(t.target)||e.classList.remove("open")}));r("#save-combined-btn").addEventListener("click",(()=>L("combined")));r("#save-split-btn").addEventListener("click",(()=>L("split")));r("#clear-cache-btn").addEventListener("click",(()=>H("Clear all locally cached data? You will need to load from a file again.",m)));r("#help-link").addEventListener("click",(e=>{e.preventDefault(),r("#help-content").classList.toggle("show")}));const t=r("#theme-toggle");t.addEventListener("change",(()=>{document.body.classList.toggle("dark-mode",t.checked),localStorage.setItem("theme",t.checked?"dark":"light")})),"dark"===localStorage.getItem("theme")&&(t.checked=!0,document.body.classList.add("dark-mode"));const n=r("#drop-area");["dragenter","dragover","dragleave","drop"].forEach((e=>n.addEventListener(e,(e=>{e.preventDefault(),e.stopPropagation()})))),["dragenter","dragover"].forEach((e=>n.addEventListener(e,(()=>n.classList.add("highlight"))))),["dragleave","drop"].forEach((e=>n.addEventListener(e,(()=>n.classList.remove("highlight"))))),n.addEventListener("drop",f),n.addEventListener("click",(()=>r("#file-input").click())),r("#browse-files-link").addEventListener("click",(e=>{e.preventDefault(),e.stopPropagation(),r("#file-input").click()})),r("#file-input").addEventListener("change",(e=>v(e.target.files))),d('input[name="upload-mode"]').forEach((e=>e.addEventListener("change",(e=>{const t="split"===e.target.value?"Drag & Drop Your 2 Secure Data Files Here":"Drag & Drop Your Combined Data File Here";r("#drop-area-text").textContent=t})))),d(".tab-button").forEach((e=>e.addEventListener("click",(()=>M(e.dataset.tab))))),r("#add-app-btn").addEventListener("click",(()=>C())),r("#edit-app-btn").addEventListener("click",(()=>{const t=r("#app-select").value;t?C(e.apps.find((e=>e.id==t))):I("Please select an application to edit.","error")})),r("#delete-app-btn").addEventListener("click",N),r("#app-search").addEventListener("keyup",(e=>w(e.target.value))),r("#add-signon-btn").addEventListener("click",(()=>x())),r("#edit-signon-btn").addEventListener("click",(()=>{const t=r("#signon-select").value;t?x(e.signons.find((e=>e.id==t))):I("Please select a sign-on method to edit.","error")})),r("#delete-signon-btn").addEventListener("click",T),r("#signon-search").addEventListener("keyup",(e=>S(e.target.value))),r("#map-button").addEventListener("click",P),r("#table-search").addEventListener("keyup",(e=>{i=1,k(e.target.value)})),r("#mapping-table tbody").addEventListener("click",D),r("#prev-year-btn").addEventListener("click",(()=>{o--,b()})),r("#next-year-btn").addEventListener("click",(()=>{o++,b()})),r("#save-app-btn").addEventListener("click",A),r("#save-signon-btn").addEventListener("click",E),r("#save-mapping-changes-btn").addEventListener("click",q),d(".modal").forEach((e=>{const t=e.querySelector(".close-button");e.addEventListener("click",(t=>{t.target===e&&e.classList.add("hidden")})),t&&t.addEventListener("click",(()=>e.classList.add("hidden")))}))})(),(()=>{r("#burger-menu-btn").innerHTML=c.burger,r("#add-app-btn").innerHTML=c.plus,r("#edit-app-btn").innerHTML=c.edit,r("#delete-app-btn").innerHTML=c.trash,r("#add-signon-btn").innerHTML=c.plus,r("#edit-signon-btn").innerHTML=c.edit,r("#delete-signon-btn").innerHTML=c.trash,r("#prev-year-btn").innerHTML=c.leftArrow,r("#next-year-btn").innerHTML=c.rightArrow})()}function f(e){v(e.dataTransfer.files)}function v(e){a=Array.from(e);const t=r("#file-list");t.innerHTML="",a.forEach((e=>{const n=document.createElement("div");n.className="file-item",n.textContent=e.name,t.appendChild(n)}))}async function h(){const o=r("#new-master-password").value;o?(n=o,r("#new-password-modal").classList.add("hidden"),r("#new-master-password").value="",e={apps:[],signons:[],mappings:[]},t=await U(n,crypto.getRandomValues(new Uint8Array(16))),I("New store initialized. Remember to save."),y(!0)):I("Password cannot be empty.","error")}async function p(){const o=r("#master-password").value,i=r('input[name="upload-mode"]:checked').value;if(r("#unlock-message").textContent="",!o)return void(r("#unlock-message").textContent="Master Password is required.");if(0===a.length)return void(r("#unlock-message").textContent="Please select your data file(s).");n=o;try{let o,s,l;if("combined"===i){if(1!==a.length)throw new Error("Combined mode requires exactly one file.");const e=JSON.parse(await a[0].text());o=new Uint8Array(atob(e.payload).split("").map((e=>e.charCodeAt(0)))),s=F(e.salt),l=F(e.iv)}else{if(2!==a.length)throw new Error("Split mode requires exactly two files.");const e=await a[0].text(),t=await a[1].text(),n=JSON.parse(e),i=JSON.parse(t);if(n.salt!==i.salt||n.iv!==i.iv)throw new Error("Data packets do not match.");o=new Uint8Array([...atob(n.payload).split("").map((e=>e.charCodeAt(0))),...atob(i.payload).split("").map((e=>e.charCodeAt(0)))]),s=F(n.salt),l=F(n.iv)}t=await U(n,s);const c=await B(t,{ciphertext:o,iv:l}),d=JSON.parse(c);if(e=d.data,!e.apps||!e.signons||!e.mappings)throw new Error("Invalid data structure");I("Data successfully decrypted."),y(!0)}catch(o){console.error("Decryption failed:",o),r("#unlock-message").textContent=`Decryption failed. ${o.message}`,t=null,e=null,n="",a=[],r("#file-list").innerHTML=""}}async function g(){const o=r("#master-password-cache").value;if(r("#unlock-message").textContent="",!o)return void(r("#unlock-message").textContent="Master Password is required.");n=o;try{const o=JSON.parse(localStorage.getItem(s)),a=F(o.salt),i=F(o.iv),l=new Uint8Array(atob(o.payload).split("").map((e=>e.charCodeAt(0))));t=await U(n,a);const c=await B(t,{ciphertext:l,iv:i}),r=JSON.parse(c);if(e=r.data,!e.apps||!e.signons||!e.mappings)throw new Error("Invalid data structure");I("Data unlocked from local cache."),y(!1)}catch(o){console.error("Cache decryption failed:",o),r("#unlock-message").textContent=`Decryption failed. Incorrect password or corrupt cache.`,t=null,e=null,n=""}}async function m(){localStorage.removeItem(s),I("Local cache cleared."),setTimeout((()=>location.reload()),1e3)}function y(t=!1){r("#unlock-container").classList.add("hidden"),r("#main-app").classList.remove("hidden"),r("#main-nav-items").classList.remove("hidden"),w(),S(),k(),b(),t&&!localStorage.getItem(s)&&H("Would you like to cache your encrypted data in your browser for faster loading next time? Your master password will still be required.",(async()=>{try{const e=crypto.getRandomValues(new Uint8Array(16)),t=await U(n,e),{ciphertext:a,iv:i}=await G(t,JSON.stringify(function(){return{pepper:W(crypto.getRandomValues(new Uint8Array(8))),version:"1.0",metadata:{last_sync:(new Date).toISOString(),device_id:`device_${Date.now()}`},data:e}}()));localStorage.setItem(s,JSON.stringify({salt:W(e),iv:W(i),payload:btoa(String.fromCharCode.apply(null,a))})),I("Data securely cached in browser.")}catch(e){console.error("Failed to cache data:",e),I("Could not cache data.","error")}}),"Cache Data","No, Thanks")}async function L(o="split"){if(!e||!n)return void I("No data or password available to save.","error");try{const a=function(){return{pepper:W(crypto.getRandomValues(new Uint8Array(8))),version:"1.0",metadata:{last_sync:(new Date).toISOString(),device_id:`device_${Date.now()}`},data:e}}(),i=JSON.stringify(a),l=crypto.getRandomValues(new Uint8Array(16));t=await U(n,l);const{ciphertext:s,iv:c}=await G(t,i),d=W(l),u=W(c);if("combined"===o){const e={type:"combined",salt:d,iv:u,payload:btoa(String.fromCharCode.apply(null,s))};O(e,"whdigo-allpackets.json"),I("Data saved to a single combined file.")}else{const e=Math.floor(s.byteLength/2),t=s.slice(0,e),n=s.slice(e),a={part:1,salt:d,iv:u,payload:btoa(String.fromCharCode.apply(null,new Uint8Array(t)))},i={part:2,salt:d,iv:u,payload:btoa(String.fromCharCode.apply(null,new Uint8Array(n)))};O(a,"whdigo-packet1.json"),O(i,"whdigo-packet2.json"),I("Data saved to two split packets.")}}catch(e){console.error("Save failed:",e),I("Failed to save data.","error")}}function M(t){d(".tab-button").forEach((e=>e.classList.toggle("active",e.dataset.tab===t))),d(".tab-content").forEach((e=>e.classList.toggle("active",e.id===`${t}-content`))),"mappings"===t&&(i=1,k()),"calendar"===t&&b()}function w(t=""){r("#app-select").innerHTML="",e.apps.filter((e=>e.name.toLowerCase().includes(t.toLowerCase()))).forEach((e=>{const t=document.createElement("option");t.value=e.id,t.textContent=e.name,r("#app-select").appendChild(t)}))}function S(t=""){r("#signon-select").innerHTML="",e.signons.filter((e=>e.name.toLowerCase().includes(t.toLowerCase()))).forEach((e=>{const t=document.createElement("option");t.value=e.id,t.textContent=e.name,r("#signon-select").appendChild(t)}))}function k(t=""){const n=r("#mapping-table tbody");n.innerHTML="";const o=e.mappings.filter((n=>{const o=e.apps.find((e=>e.id==n.appId)),a=e.signons.find((e=>e.id==n.signonId));return`${o?.name} ${a?.name} ${n.tags} ${n.comments}`.toLowerCase().includes(t.toLowerCase())})),a=(i-1)*l,s=a+l;o.slice(a,s).forEach((t=>{const o=e.apps.find((e=>e.id==t.appId)),a=e.signons.find((e=>e.id==t.signonId));if(!o||!a)return;const i=document.createElement("tr");i.innerHTML=`<td><img src="${o.logoUrl||"https://via.placeholder.com/32"}" alt="logo" onerror="this.onerror=null;this.src='https://via.placeholder.com/32';"></td><td><a href="${o.url}" target="_blank" rel="noopener noreferrer">${o.name}</a></td><td>${a.name}</td><td class="text-right"><button class="table-action-btn edit" data-id="${t.id}" title="Edit Mapping">${c.edit}</button><button class="table-action-btn delete" data-id="${t.id}" title="Delete Mapping">${c.trash}</button></td>`,n.appendChild(i)})),function(e){const t=r("#pagination-controls");t.innerHTML="";const n=Math.ceil(e/l);if(n<=1)return;const o=document.createElement("button");o.textContent="Previous",o.classList.add("secondary"),o.disabled=1===i,o.addEventListener("click",(()=>{i>1&&(i--,k(r("#table-search").value))}));const a=document.createElement("span");a.textContent=`Page ${i} of ${n}`;const s=document.createElement("button");s.textContent="Next",s.classList.add("secondary"),s.disabled=i===n,s.addEventListener("click",(()=>{i<n&&(i++,k(r("#table-search").value))})),t.append(o,a,s)}(o.length)}function b(){r("#calendar-title").textContent=o;const t=r("#calendar-view");t.innerHTML="";Array.from({length:12},((e,t)=>new Date(null,t+1,null).toLocaleDateString("en",{month:"long"}))).forEach(((n,a)=>{const i=e.mappings.filter((e=>[new Date(e.startDate),new Date(e.endDate)].some((e=>e.getFullYear()===o&&e.getMonth()===a))));if(i.length>0){const l=document.createElement("div");l.className="calendar-month";let s=`<h3>${n}</h3>`;i.forEach((t=>{const n=e.apps.find((e=>e.id==t.appId)),i=e.signons.find((e=>e.id==t.signonId)),l=new Date(t.startDate),c=new Date(t.endDate);l.getFullYear()===o&&l.getMonth()===a&&(s+=`<div class="calendar-entry"><span class="entry-start">START on ${l.getDate()}:</span> <span>${n.name} / ${i.name}</span></div>`),t.endDate&&c.getFullYear()===o&&c.getMonth()===a&&(s+=`<div class="calendar-entry"><span class="entry-end">END on ${c.getDate()}:</span> <span>${n.name} / ${i.name}</span></div>`)})),l.innerHTML=s,t.appendChild(l)}})),t.innerHTML||(t.innerHTML=`<p>No events found for ${o}.</p>`)}function P(){const t=r("#app-select").value,n=r("#signon-select").value;if(!t||!n)return void I("Please select both an Application and a Sign-On Method.","error");e.mappings.push({id:Date.now(),appId:t,signonId:n,startDate:(new Date).toISOString().split("T")[0],endDate:"",tags:"",comments:""}),I("Mapping created."),k(),M("mappings")}function D(t){const n=t.target.closest(".table-action-btn");if(!n)return;const o=n.dataset.id;n.classList.contains("edit")?j(o):n.classList.contains("delete")&&H("Are you sure you want to delete this mapping?",(()=>{e.mappings=e.mappings.filter((e=>e.id!=o)),I("Mapping deleted."),k(),b()}))}function A(){const t=r("#app-id").value,n=r("#app-name").value.trim();n?(t?Object.assign(e.apps.find((e=>e.id==t)),{name:n,url:r("#app-url").value.trim(),logoUrl:r("#app-logo-url").value.trim()}):e.apps.push({id:Date.now(),name:n,url:r("#app-url").value.trim(),logoUrl:r("#app-logo-url").value.trim()}),r("#app-modal").classList.add("hidden"),I("Application saved."),w()):I("App Name is required.","error")}function C(e=null){_("app",(()=>{r("#app-modal-title").textContent=e?"Edit Application":"Add Application",r("#app-id").value=e?.id||"",r("#app-name").value=e?.name||"",r("#app-url").value=e?.url||"",r("#app-logo-url").value=e?.logoUrl||""}))}function N(){const t=r("#app-select").value;t?H("This will also delete all associated mappings. Continue?",(()=>{e.apps=e.apps.filter((e=>e.id!=t)),e.mappings=e.mappings.filter((e=>e.appId!=t)),I("Application deleted."),w(),k()})):I("Select an application to delete.","error")}function E(){const t=r("#signon-id").value,n=r("#signon-name").value.trim();n?(t?Object.assign(e.signons.find((e=>e.id==t)),{name:n}):e.signons.push({id:Date.now(),name:n}),r("#signon-modal").classList.add("hidden"),I("Sign-On Method saved."),S()):I("Sign-On Name is required.","error")}function x(e=null){_("signon",(()=>{r("#signon-modal-title").textContent=e?"Edit Sign-On Method":"Add Sign-On Method",r("#signon-id").value=e?.id||"",r("#signon-name").value=e?.name||""}))}function T(){const t=r("#signon-select").value;t?H("This will also delete all associated mappings. Continue?",(()=>{e.signons=e.signons.filter((e=>e.id!=t)),e.mappings=e.mappings.filter((e=>e.signonId!=t)),I("Sign-On Method deleted."),S(),k()})):I("Select a sign-on method to delete.","error")}function j(t){const n=e.mappings.find((e=>e.id==t));n&&_("edit-mapping",(()=>{r("#edit-mapping-id").value=n.id,r("#edit-start-date").value=n.startDate,r("#edit-end-date").value=n.endDate,r("#edit-tags").value=n.tags,r("#edit-comments").value=n.comments}))}function q(){const t=r("#edit-mapping-id").value,n=e.mappings.find((e=>e.id==t));n&&(Object.assign(n,{startDate:r("#edit-start-date").value,endDate:r("#edit-end-date").value,tags:r("#edit-tags").value,comments:r("#edit-comments").value}),r("#edit-mapping-modal").classList.add("hidden"),I("Mapping updated."),k(),b())}function _(e,t){const n=r(`#${e}-modal`);t&&t(n),n.classList.remove("hidden")}function H(e,t,n="Confirm",o="Cancel"){r("#confirm-message").textContent=e,r("#confirm-ok-btn").textContent=n,r("#confirm-cancel-btn").textContent=o;const a=r("#confirm-modal");a.classList.remove("hidden"),r("#confirm-ok-btn").onclick=()=>{t(),a.classList.add("hidden")},r("#confirm-cancel-btn").onclick=()=>a.classList.add("hidden")}function U(e,t){return(new TextEncoder).encode(e),crypto.subtle.importKey("raw",(new TextEncoder).encode(e),{name:"PBKDF2"},!1,["deriveKey"]).then((e=>crypto.subtle.deriveKey({name:"PBKDF2",salt:t,iterations:1e5,hash:"SHA-256"},e,{name:"AES-GCM",length:256},!0,["encrypt","decrypt"])))}async function G(e,t){const n=crypto.getRandomValues(new Uint8Array(12)),o=await crypto.subtle.encrypt({name:"AES-GCM",iv:n},e,(new TextEncoder).encode(t));return{ciphertext:new Uint8Array(o),iv:n}}async function B(e,{ciphertext:t,iv:n}){const o=await crypto.subtle.decrypt({name:"AES-GCM",iv:n},e,t);return(new TextDecoder).decode(o)}function O(e,t){const n=document.createElement("a");n.href=URL.createObjectURL(new Blob([JSON.stringify(e,null,2)],{type:"application/json"})),n.download=t,n.click(),URL.revokeObjectURL(n.href)}function W(e){return Array.from(e).map((e=>e.toString(16).padStart(2,"0"))).join("")}function F(e){const t=new Uint8Array(e.length/2);for(let n=0;n<e.length;n+=2)t[n/2]=parseInt(e.substr(n,2),16);return t}function I(e,t="success"){const n=document.createElement("div");n.className=`toast ${t}`,n.textContent=e,r("#toast-container").appendChild(n),setTimeout((()=>n.remove()),4e3)}u(),"serviceWorker"in navigator&&navigator.serviceWorker.register("sw.js").then((e=>console.log("Service Worker registered:",e))).catch((e=>console.warn("No service worker found, continuing offline")))}))</script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let appData = null, encryptionKey = null, masterPassword = '';
+            let currentCalendarYear = new Date().getFullYear();
+            let uploadedFiles = [];
+            let currentMappingPage = 1;
+            const MAPPINGS_PER_PAGE = 10;
+            const CACHE_KEY = 'whdigo_secure_cache';
+
+            // Consistent icons with standardized stroke-width
+            const ICONS = {
+                burger: '<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" /></svg>',
+                plus: '<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>',
+                edit: '<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" /></svg>',
+                trash: '<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" /></svg>',
+                leftArrow: '<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" /></svg>',
+                rightArrow: '<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" /></svg>',
+            };
+
+            const $ = (selector) => document.querySelector(selector);
+            const $$ = (selector) => document.querySelectorAll(selector);
+
+            function setupPage() {
+                setIcons();
+                setupEventListeners();
+                checkForCache();
+            }
+
+            function checkForCache() {
+                if (localStorage.getItem(CACHE_KEY)) {
+                    $('#initial-load-view').style.display = 'none';
+                    $('#cached-unlock-view').style.display = 'block';
+                } else {
+                    $('#initial-load-view').style.display = 'block';
+                    $('#cached-unlock-view').style.display = 'none';
+                }
+            }
+
+            function setupEventListeners() {
+                // Initial Load Listeners
+                $('#new-store-btn').addEventListener('click', () => $('#new-password-modal').style.display = 'block');
+                $('#set-password-btn').addEventListener('click', handleNewStore);
+                $('#load-store-btn').addEventListener('click', () => { $('#initial-choice-container').style.display = 'none'; $('#load-form-container').style.display = 'block'; });
+                $('#unlock-btn').addEventListener('click', handleUnlockFromFile);
+
+                // Cached Load Listeners
+                $('#unlock-cache-btn').addEventListener('click', handleUnlockFromCache);
+                $('#start-over-link').addEventListener('click', e => { e.preventDefault(); clearCacheAndReload(); });
+
+                // Nav Menu
+                const navMenu = $('#nav-menu');
+                $('#burger-menu-btn').addEventListener('click', (e) => { e.stopPropagation(); navMenu.classList.toggle('open'); });
+                document.body.addEventListener('click', (e) => { if (!navMenu.contains(e.target) && !$('#burger-menu-btn').contains(e.target)) navMenu.classList.remove('open'); });
+                $('#save-combined-btn').addEventListener('click', () => handleSave('combined'));
+                $('#save-split-btn').addEventListener('click', () => handleSave('split'));
+                $('#clear-cache-btn').addEventListener('click', () => showConfirmationModal('Clear all locally cached data? You will need to load from a file again.', clearCacheAndReload));
+                $('#help-link').addEventListener('click', (e) => { e.preventDefault(); $('#help-content').classList.toggle('show'); });
+
+                // Theme
+                const themeToggle = $('#theme-toggle');
+                themeToggle.addEventListener('change', () => { document.body.classList.toggle('dark-mode', themeToggle.checked); localStorage.setItem('theme', themeToggle.checked ? 'dark' : 'light'); });
+                if (localStorage.getItem('theme') === 'dark') { themeToggle.checked = true; document.body.classList.add('dark-mode'); }
+
+                // File Drop Area
+                const dropArea = $('#drop-area');
+                ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => dropArea.addEventListener(eventName, (e) => { e.preventDefault(); e.stopPropagation(); }));
+                ['dragenter', 'dragover'].forEach(eventName => dropArea.addEventListener(eventName, () => dropArea.classList.add('highlight')));
+                ['dragleave', 'drop'].forEach(eventName => dropArea.addEventListener(eventName, () => dropArea.classList.remove('highlight')));
+                dropArea.addEventListener('drop', handleDrop);
+                dropArea.addEventListener('click', () => $('#file-input').click());
+                $('#browse-files-link').addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); $('#file-input').click(); });
+                $('#file-input').addEventListener('change', (e) => handleFiles(e.target.files));
+                $$('input[name="upload-mode"]').forEach(radio => radio.addEventListener('change', e => {
+                    const text = e.target.value === 'split' ? 'Drag & Drop Your 2 Secure Data Files Here' : 'Drag & Drop Your Combined Data File Here';
+                    $('#drop-area-text').textContent = text;
+                }));
+
+                // Main App Listeners
+                $$('.tab-button').forEach(button => button.addEventListener('click', () => switchTab(button.dataset.tab)));
+                $('#add-app-btn').addEventListener('click', () => openAppModal());
+                $('#edit-app-btn').addEventListener('click', () => {
+                    const selectedId = $('#app-select').value;
+                    if (selectedId) openAppModal(appData.apps.find(a => a.id == selectedId));
+                    else showToast('Please select an application to edit.', 'error');
+                });
+                $('#delete-app-btn').addEventListener('click', deleteApp);
+                $('#app-search').addEventListener('keyup', (e) => renderApps(e.target.value));
+
+                $('#add-signon-btn').addEventListener('click', () => openSignonModal());
+                $('#edit-signon-btn').addEventListener('click', () => {
+                    const selectedId = $('#signon-select').value;
+                    if (selectedId) openSignonModal(appData.signons.find(s => s.id == selectedId));
+                    else showToast('Please select a sign-on method to edit.', 'error');
+                });
+                $('#delete-signon-btn').addEventListener('click', deleteSignon);
+                $('#signon-search').addEventListener('keyup', (e) => renderSignons(e.target.value));
+
+                $('#map-button').addEventListener('click', createMapping);
+                $('#table-search').addEventListener('keyup', (e) => { currentMappingPage = 1; renderMappingTable(e.target.value); });
+                $('#mapping-table tbody').addEventListener('click', handleTableActions);
+                $('#prev-year-btn').addEventListener('click', () => { currentCalendarYear--; renderCalendar(); }); $('#next-year-btn').addEventListener('click', () => { currentCalendarYear++; renderCalendar(); });
+                $('#save-app-btn').addEventListener('click', saveApp); $('#save-signon-btn').addEventListener('click', saveSignon); $('#save-mapping-changes-btn').addEventListener('click', saveMappingChanges);
+                $$('.modal').forEach(modal => {
+                    const closeButton = modal.querySelector('.close-button');
+                    modal.addEventListener('click', (e) => { if (e.target === modal) modal.style.display = 'none'; });
+                    if (closeButton) closeButton.addEventListener('click', () => modal.style.display = 'none');
+                });
+            }
+
+            function handleFiles(files) { uploadedFiles = Array.from(files); const fileList = $('#file-list'); fileList.innerHTML = ''; uploadedFiles.forEach(file => { const fileItem = document.createElement('div'); fileItem.className = 'file-item'; fileItem.textContent = file.name; fileList.appendChild(fileItem); }); }
+            function handleDrop(e) { handleFiles(e.dataTransfer.files); }
+
+            async function handleNewStore() {
+                const password = $('#new-master-password').value;
+                if (!password) { showToast('Password cannot be empty.', 'error'); return; }
+                masterPassword = password;
+                $('#new-password-modal').style.display = 'none'; $('#new-master-password').value = '';
+                appData = { apps: [], signons: [], mappings: [] };
+                const salt = crypto.getRandomValues(new Uint8Array(16));
+                encryptionKey = await deriveKey(masterPassword, salt);
+                showToast('New store initialized. Remember to save.');
+                initMainApp(true); // From new store, prompt to cache
+            }
+
+            async function handleUnlockFromFile() {
+                const password = $('#master-password').value;
+                const mode = $('input[name="upload-mode"]:checked').value;
+                $('#unlock-message').textContent = '';
+                if (!password) { $('#unlock-message').textContent = 'Master Password is required.'; return; }
+                if (uploadedFiles.length === 0) { $('#unlock-message').textContent = 'Please select your data file(s).'; return; }
+                masterPassword = password;
+                try {
+                    let ciphertext, salt, iv;
+                    if (mode === 'combined') {
+                        if (uploadedFiles.length !== 1) throw new Error("Combined mode requires exactly one file.");
+                        const packet = JSON.parse(await uploadedFiles[0].text());
+                        ciphertext = new Uint8Array(atob(packet.payload).split('').map(c => c.charCodeAt(0)));
+                        salt = hexToBytes(packet.salt); iv = hexToBytes(packet.iv);
+                    } else {
+                        if (uploadedFiles.length !== 2) throw new Error("Split mode requires exactly two files.");
+                        const file1Text = await uploadedFiles[0].text(); const file2Text = await uploadedFiles[1].text();
+                        const packet1 = JSON.parse(file1Text); const packet2 = JSON.parse(file2Text);
+                        if (packet1.salt !== packet2.salt || packet1.iv !== packet2.iv) throw new Error('Data packets do not match.');
+                        ciphertext = new Uint8Array([...atob(packet1.payload).split('').map(c => c.charCodeAt(0)), ...atob(packet2.payload).split('').map(c => c.charCodeAt(0))]);
+                        salt = hexToBytes(packet1.salt); iv = hexToBytes(packet1.iv);
+                    }
+                    encryptionKey = await deriveKey(masterPassword, salt);
+                    const decryptedJson = await decryptData(encryptionKey, { ciphertext, iv });
+                    const rawData = JSON.parse(decryptedJson);
+                    appData = rawData.data; // The actual data is in a sub-object
+                    if (!appData.apps || !appData.signons || !appData.mappings) throw new Error("Invalid data structure");
+                    showToast('Data successfully decrypted.');
+                    initMainApp(true); // From file, prompt to cache
+                } catch (error) {
+                    console.error('Decryption failed:', error);
+                    $('#unlock-message').textContent = `Decryption failed. ${error.message}`;
+                    encryptionKey = null; appData = null; masterPassword = ''; uploadedFiles = []; $('#file-list').innerHTML = '';
+                }
+            }
+
+            async function handleUnlockFromCache() {
+                const password = $('#master-password-cache').value;
+                $('#unlock-message').textContent = '';
+                if (!password) { $('#unlock-message').textContent = 'Master Password is required.'; return; }
+                masterPassword = password;
+                try {
+                    const cached = JSON.parse(localStorage.getItem(CACHE_KEY));
+                    const salt = hexToBytes(cached.salt);
+                    const iv = hexToBytes(cached.iv);
+                    const ciphertext = new Uint8Array(atob(cached.payload).split('').map(c => c.charCodeAt(0)));
+
+                    encryptionKey = await deriveKey(masterPassword, salt);
+                    const decryptedJson = await decryptData(encryptionKey, { ciphertext, iv });
+                    const rawData = JSON.parse(decryptedJson);
+                    appData = rawData.data;
+                    if (!appData.apps || !appData.signons || !appData.mappings) throw new Error("Invalid data structure");
+                    showToast('Data unlocked from local cache.');
+                    initMainApp(false); // From cache, no need to prompt again
+                } catch (error) {
+                    console.error('Cache decryption failed:', error);
+                    $('#unlock-message').textContent = `Decryption failed. Incorrect password or corrupt cache.`;
+                    encryptionKey = null; appData = null; masterPassword = '';
+                }
+            }
+
+            async function saveToLocalStorage() {
+                try {
+                    const salt = crypto.getRandomValues(new Uint8Array(16));
+                    // Re-derive key with new salt for cache
+                    const key = await deriveKey(masterPassword, salt);
+                    const dataToSave = prepareDataForSaving();
+                    const { ciphertext, iv } = await encryptData(key, JSON.stringify(dataToSave));
+
+                    const cachedObject = {
+                        salt: bytesToHex(salt),
+                        iv: bytesToHex(iv),
+                        payload: btoa(String.fromCharCode.apply(null, ciphertext))
+                    };
+                    localStorage.setItem(CACHE_KEY, JSON.stringify(cachedObject));
+                    showToast("Data securely cached in browser.");
+                } catch (error) {
+                    console.error('Failed to cache data:', error);
+                    showToast('Could not cache data.', 'error');
+                }
+            }
+
+            function clearCacheAndReload() {
+                localStorage.removeItem(CACHE_KEY);
+                showToast("Local cache cleared.");
+                setTimeout(() => location.reload(), 1000);
+            }
+
+            function prepareDataForSaving() {
+                // Add fake pepper and other distracting values
+                return {
+                    pepper: bytesToHex(crypto.getRandomValues(new Uint8Array(8))),
+                    version: "1.0",
+                    metadata: {
+                        last_sync: new Date().toISOString(),
+                        device_id: `device_${Date.now()}`
+                    },
+                    data: appData // Nest the real data inside
+                };
+            }
+
+            async function handleSave(mode = 'split') {
+                if (!appData || !masterPassword) { showToast('No data or password available to save.', 'error'); return; }
+                try {
+                    const dataToSave = prepareDataForSaving();
+                    const jsonData = JSON.stringify(dataToSave);
+                    const newSalt = crypto.getRandomValues(new Uint8Array(16));
+                    encryptionKey = await deriveKey(masterPassword, newSalt); // Use current password with new salt
+                    const { ciphertext, iv } = await encryptData(encryptionKey, jsonData);
+                    const saltHex = bytesToHex(newSalt), ivHex = bytesToHex(iv);
+
+                    if (mode === 'combined') {
+                        const payload = btoa(String.fromCharCode.apply(null, ciphertext));
+                        const combinedPacket = { type: 'combined', salt: saltHex, iv: ivHex, payload };
+                        downloadJson(combinedPacket, `whdigo-allpackets.json`);
+                        showToast('Data saved to a single combined file.');
+                    } else {
+                        const mid = Math.floor(ciphertext.byteLength / 2);
+                        const part1 = ciphertext.slice(0, mid), part2 = ciphertext.slice(mid);
+                        const packet1 = { part: 1, salt: saltHex, iv: ivHex, payload: btoa(String.fromCharCode.apply(null, new Uint8Array(part1))) };
+                        const packet2 = { part: 2, salt: saltHex, iv: ivHex, payload: btoa(String.fromCharCode.apply(null, new Uint8Array(part2))) };
+                        downloadJson(packet1, `whdigo-packet1.json`);
+                        downloadJson(packet2, `whdigo-packet2.json`);
+                        showToast('Data saved to two split packets.');
+                    }
+                } catch (error) { console.error('Save failed:', error); showToast('Failed to save data.', 'error'); }
+            }
+
+            function initMainApp(promptToCache = false) {
+                $('#unlock-container').style.display = 'none';
+                $('#main-app').style.display = 'block';
+                $('#main-nav-items').style.display = 'block';
+                renderAll();
+
+                if (promptToCache && !localStorage.getItem(CACHE_KEY)) {
+                    showConfirmationModal(
+                        "Would you like to cache your encrypted data in your browser for faster loading next time? Your master password will still be required.",
+                        () => saveToLocalStorage(), // onConfirm
+                        "Cache Data", // OK button text
+                        "No, Thanks"  // Cancel button text
+                    );
+                }
+            }
+            function switchTab(tabId) { $$('.tab-button').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tabId)); $$('.tab-content').forEach(content => content.classList.toggle('active', content.id === `${tabId}-content`)); if (tabId === 'mappings') { currentMappingPage = 1; renderMappingTable(); } if (tabId === 'calendar') renderCalendar(); }
+            function renderAll() { renderApps(); renderSignons(); renderMappingTable(); renderCalendar(); }
+            function renderApps(filter = '') { $('#app-select').innerHTML = ''; appData.apps.filter(app => app.name.toLowerCase().includes(filter.toLowerCase())).forEach(app => { const opt = document.createElement('option'); opt.value = app.id; opt.textContent = app.name; $('#app-select').appendChild(opt); }); }
+            function renderSignons(filter = '') { $('#signon-select').innerHTML = ''; appData.signons.filter(s => s.name.toLowerCase().includes(filter.toLowerCase())).forEach(s => { const opt = document.createElement('option'); opt.value = s.id; opt.textContent = s.name; $('#signon-select').appendChild(opt); }); }
+
+            function renderMappingTable(filter = '') {
+                const tbody = $('#mapping-table tbody'); tbody.innerHTML = '';
+                const filtered = appData.mappings.filter(m => { const app = appData.apps.find(a => a.id == m.appId), signon = appData.signons.find(s => s.id == m.signonId); return `${app?.name} ${signon?.name} ${m.tags} ${m.comments}`.toLowerCase().includes(filter.toLowerCase()); });
+
+                const start = (currentMappingPage - 1) * MAPPINGS_PER_PAGE;
+                const end = start + MAPPINGS_PER_PAGE;
+                const paginatedItems = filtered.slice(start, end);
+
+                paginatedItems.forEach(m => {
+                    const app = appData.apps.find(a => a.id == m.appId), signon = appData.signons.find(s => s.id == m.signonId);
+                    if (!app || !signon) return;
+                    const row = document.createElement('tr');
+                    row.innerHTML = `<td><img src="${app.logoUrl || 'https://via.placeholder.com/32'}" alt="logo" onerror="this.onerror=null;this.src='https://via.placeholder.com/32';"></td><td><a href="${app.url}" target="_blank" rel="noopener noreferrer">${app.name}</a></td><td>${signon.name}</td><td style="text-align: right;"><button class="table-action-btn edit" data-id="${m.id}" title="Edit Mapping">${ICONS.edit}</button><button class="table-action-btn delete" data-id="${m.id}" title="Delete Mapping">${ICONS.trash}</button></td>`;
+                    tbody.appendChild(row);
+                });
+                renderPaginationControls(filtered.length);
+            }
+
+            function renderPaginationControls(totalItems) {
+                const controlsContainer = $('#pagination-controls'); controlsContainer.innerHTML = '';
+                const pageCount = Math.ceil(totalItems / MAPPINGS_PER_PAGE);
+                if (pageCount <= 1) return;
+
+                const prevButton = document.createElement('button'); prevButton.textContent = 'Previous'; prevButton.classList.add('secondary');
+                prevButton.disabled = currentMappingPage === 1;
+                prevButton.addEventListener('click', () => { if (currentMappingPage > 1) { currentMappingPage--; renderMappingTable($('#table-search').value); } });
+
+                const pageInfo = document.createElement('span'); pageInfo.textContent = `Page ${currentMappingPage} of ${pageCount}`;
+
+                const nextButton = document.createElement('button'); nextButton.textContent = 'Next'; nextButton.classList.add('secondary');
+                nextButton.disabled = currentMappingPage === pageCount;
+                nextButton.addEventListener('click', () => { if (currentMappingPage < pageCount) { currentMappingPage++; renderMappingTable($('#table-search').value); } });
+
+                controlsContainer.append(prevButton, pageInfo, nextButton);
+            }
+
+            function renderCalendar() { $('#calendar-title').textContent = currentCalendarYear; const view = $('#calendar-view'); view.innerHTML = ''; const months = Array.from({ length: 12 }, (e, i) => new Date(null, i + 1, null).toLocaleDateString("en", { month: "long" })); months.forEach((monthName, monthIndex) => { const mappingsInMonth = appData.mappings.filter(m => [new Date(m.startDate), new Date(m.endDate)].some(d => d.getFullYear() === currentCalendarYear && d.getMonth() === monthIndex)); if (mappingsInMonth.length > 0) { const monthDiv = document.createElement('div'); monthDiv.className = 'calendar-month'; let entriesHTML = `<h3>${monthName}</h3>`; mappingsInMonth.forEach(m => { const app = appData.apps.find(a => a.id == m.appId), signon = appData.signons.find(s => s.id == m.signonId); const start = new Date(m.startDate), end = new Date(m.endDate); if (start.getFullYear() === currentCalendarYear && start.getMonth() === monthIndex) entriesHTML += `<div class="calendar-entry"><span class="entry-start">START on ${start.getDate()}:</span> <span>${app.name} / ${signon.name}</span></div>`; if (m.endDate && end.getFullYear() === currentCalendarYear && end.getMonth() === monthIndex) entriesHTML += `<div class="calendar-entry"><span class="entry-end">END on ${end.getDate()}:</span> <span>${app.name} / ${signon.name}</span></div>`; }); monthDiv.innerHTML = entriesHTML; view.appendChild(monthDiv); } }); if (!view.innerHTML) view.innerHTML = `<p>No events found for ${currentCalendarYear}.</p>`; }
+            function createMapping() { const appId = $('#app-select').value, signonId = $('#signon-select').value; if (!appId || !signonId) { showToast('Please select both an Application and a Sign-On Method.', 'error'); return; } const newMapping = { id: Date.now(), appId, signonId, startDate: new Date().toISOString().split('T')[0], endDate: '', tags: '', comments: '' }; appData.mappings.push(newMapping); showToast('Mapping created.'); renderMappingTable(); switchTab('mappings'); }
+            function handleTableActions(e) { const btn = e.target.closest('.table-action-btn'); if (!btn) return; const mappingId = btn.dataset.id; if (btn.classList.contains('edit')) openEditMappingModal(mappingId); else if (btn.classList.contains('delete')) { showConfirmationModal('Are you sure you want to delete this mapping?', () => { appData.mappings = appData.mappings.filter(m => m.id != mappingId); showToast('Mapping deleted.'); renderMappingTable(); renderCalendar(); }); } }
+            function saveApp() { const id = $('#app-id').value, name = $('#app-name').value.trim(); if (!name) return showToast('App Name is required.', 'error'); if (id) Object.assign(appData.apps.find(a => a.id == id), { name, url: $('#app-url').value.trim(), logoUrl: $('#app-logo-url').value.trim() }); else appData.apps.push({ id: Date.now(), name, url: $('#app-url').value.trim(), logoUrl: $('#app-logo-url').value.trim() }); $('#app-modal').style.display = 'none'; showToast('Application saved.'); renderApps(); }
+            function openAppModal(app = null) { openModal('app', () => { $('#app-modal-title').textContent = app ? 'Edit Application' : 'Add Application'; $('#app-id').value = app?.id || ''; $('#app-name').value = app?.name || ''; $('#app-url').value = app?.url || ''; $('#app-logo-url').value = app?.logoUrl || ''; }); }
+            function deleteApp() { const appId = $('#app-select').value; if (!appId) return showToast('Select an application to delete.', 'error'); showConfirmationModal('This will also delete all associated mappings. Continue?', () => { appData.apps = appData.apps.filter(a => a.id != appId); appData.mappings = appData.mappings.filter(m => m.appId != appId); showToast('Application deleted.'); renderApps(); renderMappingTable(); }); }
+            function saveSignon() { const id = $('#signon-id').value, name = $('#signon-name').value.trim(); if (!name) return showToast('Sign-On Name is required.', 'error'); if (id) Object.assign(appData.signons.find(s => s.id == id), { name }); else appData.signons.push({ id: Date.now(), name }); $('#signon-modal').style.display = 'none'; showToast('Sign-On Method saved.'); renderSignons(); }
+            function openSignonModal(signon = null) { openModal('signon', () => { $('#signon-modal-title').textContent = signon ? 'Edit Sign-On Method' : 'Add Sign-On Method'; $('#signon-id').value = signon?.id || ''; $('#signon-name').value = signon?.name || ''; }); }
+            function deleteSignon() { const signonId = $('#signon-select').value; if (!signonId) return showToast('Select a sign-on method to delete.', 'error'); showConfirmationModal('This will also delete all associated mappings. Continue?', () => { appData.signons = appData.signons.filter(s => s.id != signonId); appData.mappings = appData.mappings.filter(m => m.signonId != signonId); showToast('Sign-On Method deleted.'); renderSignons(); renderMappingTable(); }); }
+            function openEditMappingModal(mappingId) { const mapping = appData.mappings.find(m => m.id == mappingId); if (!mapping) return; openModal('edit-mapping', () => { $('#edit-mapping-id').value = mapping.id; $('#edit-start-date').value = mapping.startDate; $('#edit-end-date').value = mapping.endDate; $('#edit-tags').value = mapping.tags; $('#edit-comments').value = mapping.comments; }); }
+            function saveMappingChanges() { const mappingId = $('#edit-mapping-id').value; const mapping = appData.mappings.find(m => m.id == mappingId); if (!mapping) return; Object.assign(mapping, { startDate: $('#edit-start-date').value, endDate: $('#edit-end-date').value, tags: $('#edit-tags').value, comments: $('#edit-comments').value }); $('#edit-mapping-modal').style.display = 'none'; showToast('Mapping updated.'); renderMappingTable(); renderCalendar(); }
+            function openModal(modalId, setupFn) { const modal = $(`#${modalId}-modal`); if (setupFn) setupFn(modal); modal.style.display = 'block'; }
+            function showConfirmationModal(message, onConfirm, okText = 'Confirm', cancelText = 'Cancel') {
+                $('#confirm-message').textContent = message;
+                $('#confirm-ok-btn').textContent = okText;
+                $('#confirm-cancel-btn').textContent = cancelText;
+                const modal = $('#confirm-modal');
+                modal.style.display = 'block';
+                $('#confirm-ok-btn').onclick = () => { onConfirm(); modal.style.display = 'none'; };
+                $('#confirm-cancel-btn').onclick = () => modal.style.display = 'none';
+            }
+            function deriveKey(password, salt) { const enc = new TextEncoder(); return crypto.subtle.importKey('raw', enc.encode(password), { name: 'PBKDF2' }, false, ['deriveKey']).then(baseKey => crypto.subtle.deriveKey({ name: 'PBKDF2', salt, iterations: 100000, hash: 'SHA-256' }, baseKey, { name: 'AES-GCM', length: 256 }, true, ["encrypt", "decrypt"])); }
+            async function encryptData(key, jsonData) { const iv = crypto.getRandomValues(new Uint8Array(12)); const ciphertext = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, new TextEncoder().encode(jsonData)); return { ciphertext: new Uint8Array(ciphertext), iv }; }
+            async function decryptData(key, { ciphertext, iv }) { const decrypted = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, ciphertext); return new TextDecoder().decode(decrypted); }
+            function downloadJson(data, filename) { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })); a.download = filename; a.click(); URL.revokeObjectURL(a.href); }
+            function bytesToHex(bytes) { return Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join(''); }
+            function hexToBytes(hex) { const bytes = new Uint8Array(hex.length / 2); for (let i = 0; i < hex.length; i += 2) bytes[i / 2] = parseInt(hex.substr(i, 2), 16); return bytes; }
+            function showToast(message, type = 'success') { const toast = document.createElement('div'); toast.className = `toast ${type}`; toast.textContent = message; $('#toast-container').appendChild(toast); setTimeout(() => toast.remove(), 4000); }
+            function setIcons() { $('#burger-menu-btn').innerHTML = ICONS.burger; $('#add-app-btn').innerHTML = ICONS.plus; $('#edit-app-btn').innerHTML = ICONS.edit; $('#delete-app-btn').innerHTML = ICONS.trash; $('#add-signon-btn').innerHTML = ICONS.plus; $('#edit-signon-btn').innerHTML = ICONS.edit; $('#delete-signon-btn').innerHTML = ICONS.trash; $('#prev-year-btn').innerHTML = ICONS.leftArrow; $('#next-year-btn').innerHTML = ICONS.rightArrow; }
+
+            // Initialise the app
+            setupPage();
+
+            // PWA Service Worker Registration if available
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('sw.js')
+                    .then(reg => console.log('Service Worker registered:', reg))
+                    .catch(err => console.warn('No service worker found, continuing offline'));
+            }
+        });
+    </script>
 </body>
 </html>
