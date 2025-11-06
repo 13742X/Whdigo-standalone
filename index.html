@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -590,9 +589,6 @@
                         <button id="new-store-btn">Create New Secure Store</button>
                         <button id="load-store-btn" class="secondary">Load Existing Store</button>
                     </div>
-                    <div class="form-grid" style="margin-top: 1rem;">
-                        <button id="sync-btn" title="Not Recommended" disabled>Sync to Server</button>
-                    </div>
                 </div>
                 <div id="load-form-container" style="display: none;">
                     <div class="form-group"><label for="master-password">Master Password</label><input type="password" id="master-password" placeholder="Enter the password for your store"></div>
@@ -627,7 +623,7 @@
                 <div id="pagination-controls"></div>
             </div>
             <div id="calendar-content" class="tab-content">
-                <div class="header"><button id="prev-year-btn" class="icon-btn secondary" title="Previous Year"></button><h2 id="calendar-title"></h2><button id="next-year-btn" class="icon-btn secondary" title="Next Year"></button></div><div id="calendar-view"></div>
+                <div class="header" style="justify-content: center;"><button id="prev-year-btn" class="icon-btn secondary" title="Previous Year"></button><h2 id="calendar-title" style="margin: 0 1rem;"></h2><button id="next-year-btn" class="icon-btn secondary" title="Next Year"></button></div><div id="calendar-view"></div>
             </div>
         </div>
     </div>
@@ -645,7 +641,7 @@
             let currentCalendarYear = new Date().getFullYear();
             let uploadedFiles = [];
             let currentMappingPage = 1;
-            const MAPPINGS_PER_PAGE = 10;
+            const MAPPINGS_PER_PAGE = 50;
             const CACHE_KEY = 'whdigo_secure_cache';
 
             // Consistent icons with standardized stroke-width
@@ -657,6 +653,8 @@
                 leftArrow: '<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" /></svg>',
                 rightArrow: '<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" /></svg>',
             };
+
+            const FALLBACK_LOGO_SVG = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiB4bWxuczp2PSJodHRwczovL3ZlY3RhLmlvL25hbm8iPjxwYXRoIGQ9Ik0yMiAxM2gyOWwuMDQ0IDEwLjcyMS4xOTIgMzUuMDcyLjExMSAyMS4yNjQuMTE3IDIwLjUyMS4wMzQgNy44MjguMDcgMTAuOTY3LS4wMDQgMy4yNjdjLjA5MyA3LjQwNyAxLjAyNSAxMi4yNzggNS42ODcgMTguMjM0IDQuNDEgMy40MDcgNy45NzUgMy4zMzkgMTMuMzc1IDIuNjg4IDQuNTY5LTIuMTE1IDYuMzItNS4wNjIgOC4zNzUtOS41NjIuOTEzLTMuMDI5IDEuMTM1LTUuNzY1IDEuMTU4LTguOTIzbC4wMy0zIC4wMTctMy4yNzIuMDMtMy40Ni4wODEtMTEuMzMuMDYzLTcuODUyLjEzOC0xOC41NjEuMTYtMjEuMTM0TDgxIDEzaDI5bC4wNiAxMC45MzYuMjI3IDM1LjczLjEzNCAyMS42NzQuMTIxIDE4Ljg5Mi4wNjEgMTAuMDAyLjA3OCAxMS4xNjkuMDA3IDMuMzQ2LjAzNCAzLjA4MS4wMTcgMi42NjhjLjI5NCAyLjc5NiAxLjEyMSA0LjkzIDIuMjYyIDcuNDg5bC44MDEgMi4yMjNjMS4xMDMgMS45OTYgMS4xMDMgMS45OTYgMy41NTUgMi43MTEgNi4zMDQgMS4xMjIgMTAuMTQ2IDEuNTQ1IDUuNjQ1LTEuOTM0IDQuNTY4LTQuNTY4IDUuMTEyLTguODI5IDUuMTU4LTE1LjA4MWwuMDMtMy4wMy4wMTctMy4yODkuMDMtMy40OS4wODEtMTEuNDExLjA2My03LjkxNS4xMzgtMTguNjk5LjE2LTIxLjI5NEwxMzkgMTNoMjlsLjI1OSAzOC4xMTcuMTE4IDIyLjM0Ni4wOTMgMTkuNDk3LjA1OCAxMC4zMDVjLjE5OCAyMC44MTItLjQ4NiAzNi41MTgtMTUuMTc3IDUyLjUzMi05LjEzMSA4LjY0MS0yMC4xODEgMTEuNzI0LTMyLjM5MSAxMS40NzctMTAuMTM1LS43LTE3LjQ5Mi00LjU1OS0yNC45NjEtMTEuMjczLTIuOTU3IDEuMzg1LTUuNDg1IDMuMDIzLTguMTI1IDQuOTM4Qzc4Ljg4MiAxNzYuOTE4IDY5LjY3OCAxNzguMDc0IDU5IDE3N2MtNi45MDctMS41ODYtMTMuMDM2LTQuMjA0LTE5LTh2LTJsLTEuNzgxLS43NDJjLTcuMDkzLTQuMDIxLTExLjgyNy0xMy40NTUtMTQuMDM0LTIxLjA3MS0xLjg5NC03Ljc0NC0yLjYwNC0xNC45MDctMi41MjUtMjIuODYybC0uMDAxLTMuNjEyLjA0OS0xMS42Ny4wMTMtOC4xNS4wNjQtMTkuMTY2LjA2NS0yMS44NDZMMjIgMTN6IiBmaWxsPSIjMzUxZDcxIi8+PC9zdmc+';
 
             const $ = (selector) => document.querySelector(selector);
             const $$ = (selector) => document.querySelectorAll(selector);
@@ -721,8 +719,10 @@
                 $('#add-app-btn').addEventListener('click', () => openAppModal());
                 $('#edit-app-btn').addEventListener('click', () => {
                     const selectedId = $('#app-select').value;
-                    if (selectedId) openAppModal(appData.apps.find(a => a.id == selectedId));
-                    else showToast('Please select an application to edit.', 'error');
+                    if (!selectedId) return showToast('Please select an application to edit.', 'error');
+                    const appToEdit = appData.apps.find(a => a.id == selectedId);
+                    if (appToEdit) openAppModal(appToEdit);
+                    else showToast('Could not find selected application.', 'error');
                 });
                 $('#delete-app-btn').addEventListener('click', deleteApp);
                 $('#app-search').addEventListener('keyup', (e) => renderApps(e.target.value));
@@ -730,8 +730,10 @@
                 $('#add-signon-btn').addEventListener('click', () => openSignonModal());
                 $('#edit-signon-btn').addEventListener('click', () => {
                     const selectedId = $('#signon-select').value;
-                    if (selectedId) openSignonModal(appData.signons.find(s => s.id == selectedId));
-                    else showToast('Please select a sign-on method to edit.', 'error');
+                    if (!selectedId) return showToast('Please select a sign-on method to edit.', 'error');
+                    const signonToEdit = appData.signons.find(s => s.id == selectedId);
+                    if (signonToEdit) openSignonModal(signonToEdit);
+                    else showToast('Could not find selected sign-on method.', 'error');
                 });
                 $('#delete-signon-btn').addEventListener('click', deleteSignon);
                 $('#signon-search').addEventListener('keyup', (e) => renderSignons(e.target.value));
@@ -760,8 +762,18 @@
                 const salt = crypto.getRandomValues(new Uint8Array(16));
                 encryptionKey = await deriveKey(masterPassword, salt);
                 showToast('New store initialized. Remember to save.');
-                initMainApp(true); // From new store, prompt to cache
+                initMainApp(true);
             }
+
+            const normalizeDataIds = (data) => {
+                data.apps.forEach(app => app.id = Number(app.id));
+                data.signons.forEach(s => s.id = Number(s.id));
+                data.mappings.forEach(m => {
+                    m.id = Number(m.id);
+                    m.appId = Number(m.appId);
+                    m.signonId = Number(m.signonId);
+                });
+            };
 
             async function handleUnlockFromFile() {
                 const password = $('#master-password').value;
@@ -788,10 +800,11 @@
                     encryptionKey = await deriveKey(masterPassword, salt);
                     const decryptedJson = await decryptData(encryptionKey, { ciphertext, iv });
                     const rawData = JSON.parse(decryptedJson);
-                    appData = rawData.data; // The actual data is in a sub-object
+                    appData = rawData.data;
                     if (!appData.apps || !appData.signons || !appData.mappings) throw new Error("Invalid data structure");
+                    normalizeDataIds(appData);
                     showToast('Data successfully decrypted.');
-                    initMainApp(true); // From file, prompt to cache
+                    initMainApp(true);
                 } catch (error) {
                     console.error('Decryption failed:', error);
                     $('#unlock-message').textContent = `Decryption failed. ${error.message}`;
@@ -815,8 +828,9 @@
                     const rawData = JSON.parse(decryptedJson);
                     appData = rawData.data;
                     if (!appData.apps || !appData.signons || !appData.mappings) throw new Error("Invalid data structure");
+                    normalizeDataIds(appData);
                     showToast('Data unlocked from local cache.');
-                    initMainApp(false); // From cache, no need to prompt again
+                    initMainApp(false);
                 } catch (error) {
                     console.error('Cache decryption failed:', error);
                     $('#unlock-message').textContent = `Decryption failed. Incorrect password or corrupt cache.`;
@@ -827,7 +841,6 @@
             async function saveToLocalStorage() {
                 try {
                     const salt = crypto.getRandomValues(new Uint8Array(16));
-                    // Re-derive key with new salt for cache
                     const key = await deriveKey(masterPassword, salt);
                     const dataToSave = prepareDataForSaving();
                     const { ciphertext, iv } = await encryptData(key, JSON.stringify(dataToSave));
@@ -852,7 +865,6 @@
             }
 
             function prepareDataForSaving() {
-                // Add fake pepper and other distracting values
                 return {
                     pepper: bytesToHex(crypto.getRandomValues(new Uint8Array(8))),
                     version: "1.0",
@@ -860,7 +872,7 @@
                         last_sync: new Date().toISOString(),
                         device_id: `device_${Date.now()}`
                     },
-                    data: appData // Nest the real data inside
+                    data: appData
                 };
             }
 
@@ -870,7 +882,7 @@
                     const dataToSave = prepareDataForSaving();
                     const jsonData = JSON.stringify(dataToSave);
                     const newSalt = crypto.getRandomValues(new Uint8Array(16));
-                    encryptionKey = await deriveKey(masterPassword, newSalt); // Use current password with new salt
+                    encryptionKey = await deriveKey(masterPassword, newSalt);
                     const { ciphertext, iv } = await encryptData(encryptionKey, jsonData);
                     const saltHex = bytesToHex(newSalt), ivHex = bytesToHex(iv);
 
@@ -900,20 +912,20 @@
                 if (promptToCache && !localStorage.getItem(CACHE_KEY)) {
                     showConfirmationModal(
                         "Would you like to cache your encrypted data in your browser for faster loading next time? Your master password will still be required.",
-                        () => saveToLocalStorage(), // onConfirm
-                        "Cache Data", // OK button text
-                        "No, Thanks"  // Cancel button text
+                        () => saveToLocalStorage(),
+                        "Cache Data",
+                        "No, Thanks"
                     );
                 }
             }
-            function switchTab(tabId) { $$('.tab-button').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tabId)); $$('.tab-content').forEach(content => content.classList.toggle('active', content.id === `${tabId}-content`)); if (tabId === 'mappings') { currentMappingPage = 1; renderMappingTable(); } if (tabId === 'calendar') renderCalendar(); }
+            function switchTab(tabId) { $$('.tab-button').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tabId)); $$('.tab-content').forEach(content => content.classList.toggle('active', content.id === `${tabId}-content`)); if (appData) { if (tabId === 'mappings') { currentMappingPage = 1; renderMappingTable(); } if (tabId === 'calendar') renderCalendar(); } }
             function renderAll() { renderApps(); renderSignons(); renderMappingTable(); renderCalendar(); }
             function renderApps(filter = '') { $('#app-select').innerHTML = ''; appData.apps.filter(app => app.name.toLowerCase().includes(filter.toLowerCase())).forEach(app => { const opt = document.createElement('option'); opt.value = app.id; opt.textContent = app.name; $('#app-select').appendChild(opt); }); }
             function renderSignons(filter = '') { $('#signon-select').innerHTML = ''; appData.signons.filter(s => s.name.toLowerCase().includes(filter.toLowerCase())).forEach(s => { const opt = document.createElement('option'); opt.value = s.id; opt.textContent = s.name; $('#signon-select').appendChild(opt); }); }
 
             function renderMappingTable(filter = '') {
                 const tbody = $('#mapping-table tbody'); tbody.innerHTML = '';
-                const filtered = appData.mappings.filter(m => { const app = appData.apps.find(a => a.id == m.appId), signon = appData.signons.find(s => s.id == m.signonId); return `${app?.name} ${signon?.name} ${m.tags} ${m.comments}`.toLowerCase().includes(filter.toLowerCase()); });
+                const filtered = appData.mappings.filter(m => { const app = appData.apps.find(a => a.id == m.appId), signon = appData.signons.find(s => s.id == m.signonId); if (!app || !signon) return false; return `${app.name} ${signon.name} ${m.tags} ${m.comments}`.toLowerCase().includes(filter.toLowerCase()); });
 
                 const start = (currentMappingPage - 1) * MAPPINGS_PER_PAGE;
                 const end = start + MAPPINGS_PER_PAGE;
@@ -923,7 +935,8 @@
                     const app = appData.apps.find(a => a.id == m.appId), signon = appData.signons.find(s => s.id == m.signonId);
                     if (!app || !signon) return;
                     const row = document.createElement('tr');
-                    row.innerHTML = `<td><img src="${app.logoUrl || 'https://via.placeholder.com/32'}" alt="logo" onerror="this.onerror=null;this.src='https://via.placeholder.com/32';"></td><td><a href="${app.url}" target="_blank" rel="noopener noreferrer">${app.name}</a></td><td>${signon.name}</td><td style="text-align: right;"><button class="table-action-btn edit" data-id="${m.id}" title="Edit Mapping">${ICONS.edit}</button><button class="table-action-btn delete" data-id="${m.id}" title="Delete Mapping">${ICONS.trash}</button></td>`;
+                    const appUrl = app.url ? `<a href="${app.url}" target="_blank" rel="noopener noreferrer">${app.name}</a>` : app.name;
+                    row.innerHTML = `<td><img src="${app.logoUrl || FALLBACK_LOGO_SVG}" alt="logo" onerror="this.onerror=null;this.src='${FALLBACK_LOGO_SVG}';"></td><td>${appUrl}</td><td>${signon.name}</td><td style="text-align: right;"><button class="table-action-btn edit" data-id="${m.id}" title="Edit Mapping">${ICONS.edit}</button><button class="table-action-btn delete" data-id="${m.id}" title="Delete Mapping">${ICONS.trash}</button></td>`;
                     tbody.appendChild(row);
                 });
                 renderPaginationControls(filtered.length);
@@ -947,13 +960,13 @@
                 controlsContainer.append(prevButton, pageInfo, nextButton);
             }
 
-            function renderCalendar() { $('#calendar-title').textContent = currentCalendarYear; const view = $('#calendar-view'); view.innerHTML = ''; const months = Array.from({ length: 12 }, (e, i) => new Date(null, i + 1, null).toLocaleDateString("en", { month: "long" })); months.forEach((monthName, monthIndex) => { const mappingsInMonth = appData.mappings.filter(m => [new Date(m.startDate), new Date(m.endDate)].some(d => d.getFullYear() === currentCalendarYear && d.getMonth() === monthIndex)); if (mappingsInMonth.length > 0) { const monthDiv = document.createElement('div'); monthDiv.className = 'calendar-month'; let entriesHTML = `<h3>${monthName}</h3>`; mappingsInMonth.forEach(m => { const app = appData.apps.find(a => a.id == m.appId), signon = appData.signons.find(s => s.id == m.signonId); const start = new Date(m.startDate), end = new Date(m.endDate); if (start.getFullYear() === currentCalendarYear && start.getMonth() === monthIndex) entriesHTML += `<div class="calendar-entry"><span class="entry-start">START on ${start.getDate()}:</span> <span>${app.name} / ${signon.name}</span></div>`; if (m.endDate && end.getFullYear() === currentCalendarYear && end.getMonth() === monthIndex) entriesHTML += `<div class="calendar-entry"><span class="entry-end">END on ${end.getDate()}:</span> <span>${app.name} / ${signon.name}</span></div>`; }); monthDiv.innerHTML = entriesHTML; view.appendChild(monthDiv); } }); if (!view.innerHTML) view.innerHTML = `<p>No events found for ${currentCalendarYear}.</p>`; }
-            function createMapping() { const appId = $('#app-select').value, signonId = $('#signon-select').value; if (!appId || !signonId) { showToast('Please select both an Application and a Sign-On Method.', 'error'); return; } const newMapping = { id: Date.now(), appId, signonId, startDate: new Date().toISOString().split('T')[0], endDate: '', tags: '', comments: '' }; appData.mappings.push(newMapping); showToast('Mapping created.'); renderMappingTable(); switchTab('mappings'); }
+            function renderCalendar() { $('#calendar-title').textContent = currentCalendarYear; const view = $('#calendar-view'); view.innerHTML = ''; const months = Array.from({ length: 12 }, (e, i) => new Date(null, i + 1, null).toLocaleDateString("en", { month: "long" })); months.forEach((monthName, monthIndex) => { const mappingsInMonth = appData.mappings.filter(m => [new Date(m.startDate), new Date(m.endDate)].some(d => d.getFullYear() === currentCalendarYear && d.getMonth() === monthIndex)); if (mappingsInMonth.length > 0) { const monthDiv = document.createElement('div'); monthDiv.className = 'calendar-month'; let entriesHTML = `<h3>${monthName}</h3>`; mappingsInMonth.forEach(m => { const app = appData.apps.find(a => a.id == m.appId), signon = appData.signons.find(s => s.id == m.signonId); if (!app || !signon) return; const start = new Date(m.startDate), end = new Date(m.endDate); if (start.getFullYear() === currentCalendarYear && start.getMonth() === monthIndex) entriesHTML += `<div class="calendar-entry"><span class="entry-start">START on ${start.getDate()}:</span> <span>${app.name} / ${signon.name}</span></div>`; if (m.endDate && end.getFullYear() === currentCalendarYear && end.getMonth() === monthIndex) entriesHTML += `<div class="calendar-entry"><span class="entry-end">END on ${end.getDate()}:</span> <span>${app.name} / ${signon.name}</span></div>`; }); monthDiv.innerHTML = entriesHTML; view.appendChild(monthDiv); } }); if (!view.innerHTML) view.innerHTML = `<p>No events found for ${currentCalendarYear}.</p>`; }
+            function createMapping() { const appId = $('#app-select').value, signonId = $('#signon-select').value; if (!appId || !signonId) { showToast('Please select both an Application and a Sign-On Method.', 'error'); return; } appData.mappings.push({ id: Date.now(), appId: Number(appId), signonId: Number(signonId), startDate: new Date().toISOString().split('T')[0], endDate: '', tags: '', comments: '' }); showToast('Mapping created.'); renderMappingTable(); switchTab('mappings'); }
             function handleTableActions(e) { const btn = e.target.closest('.table-action-btn'); if (!btn) return; const mappingId = btn.dataset.id; if (btn.classList.contains('edit')) openEditMappingModal(mappingId); else if (btn.classList.contains('delete')) { showConfirmationModal('Are you sure you want to delete this mapping?', () => { appData.mappings = appData.mappings.filter(m => m.id != mappingId); showToast('Mapping deleted.'); renderMappingTable(); renderCalendar(); }); } }
-            function saveApp() { const id = $('#app-id').value, name = $('#app-name').value.trim(); if (!name) return showToast('App Name is required.', 'error'); if (id) Object.assign(appData.apps.find(a => a.id == id), { name, url: $('#app-url').value.trim(), logoUrl: $('#app-logo-url').value.trim() }); else appData.apps.push({ id: Date.now(), name, url: $('#app-url').value.trim(), logoUrl: $('#app-logo-url').value.trim() }); $('#app-modal').style.display = 'none'; showToast('Application saved.'); renderApps(); }
+            function saveApp() { const id = $('#app-id').value, name = $('#app-name').value.trim(); if (!name) return showToast('App Name is required.', 'error'); if (id) Object.assign(appData.apps.find(a => a.id == id), { name, url: $('#app-url').value.trim(), logoUrl: $('#app-logo-url').value.trim() }); else appData.apps.push({ id: Date.now(), name, url: $('#app-url').value.trim(), logoUrl: $('#app-logo-url').value.trim() }); $('#app-modal').style.display = 'none'; showToast('Application saved.'); renderApps(); renderMappingTable(); }
             function openAppModal(app = null) { openModal('app', () => { $('#app-modal-title').textContent = app ? 'Edit Application' : 'Add Application'; $('#app-id').value = app?.id || ''; $('#app-name').value = app?.name || ''; $('#app-url').value = app?.url || ''; $('#app-logo-url').value = app?.logoUrl || ''; }); }
             function deleteApp() { const appId = $('#app-select').value; if (!appId) return showToast('Select an application to delete.', 'error'); showConfirmationModal('This will also delete all associated mappings. Continue?', () => { appData.apps = appData.apps.filter(a => a.id != appId); appData.mappings = appData.mappings.filter(m => m.appId != appId); showToast('Application deleted.'); renderApps(); renderMappingTable(); }); }
-            function saveSignon() { const id = $('#signon-id').value, name = $('#signon-name').value.trim(); if (!name) return showToast('Sign-On Name is required.', 'error'); if (id) Object.assign(appData.signons.find(s => s.id == id), { name }); else appData.signons.push({ id: Date.now(), name }); $('#signon-modal').style.display = 'none'; showToast('Sign-On Method saved.'); renderSignons(); }
+            function saveSignon() { const id = $('#signon-id').value, name = $('#signon-name').value.trim(); if (!name) return showToast('Sign-On Name is required.', 'error'); if (id) Object.assign(appData.signons.find(s => s.id == id), { name }); else appData.signons.push({ id: Date.now(), name }); $('#signon-modal').style.display = 'none'; showToast('Sign-On Method saved.'); renderSignons(); renderMappingTable(); }
             function openSignonModal(signon = null) { openModal('signon', () => { $('#signon-modal-title').textContent = signon ? 'Edit Sign-On Method' : 'Add Sign-On Method'; $('#signon-id').value = signon?.id || ''; $('#signon-name').value = signon?.name || ''; }); }
             function deleteSignon() { const signonId = $('#signon-select').value; if (!signonId) return showToast('Select a sign-on method to delete.', 'error'); showConfirmationModal('This will also delete all associated mappings. Continue?', () => { appData.signons = appData.signons.filter(s => s.id != signonId); appData.mappings = appData.mappings.filter(m => m.signonId != signonId); showToast('Sign-On Method deleted.'); renderSignons(); renderMappingTable(); }); }
             function openEditMappingModal(mappingId) { const mapping = appData.mappings.find(m => m.id == mappingId); if (!mapping) return; openModal('edit-mapping', () => { $('#edit-mapping-id').value = mapping.id; $('#edit-start-date').value = mapping.startDate; $('#edit-end-date').value = mapping.endDate; $('#edit-tags').value = mapping.tags; $('#edit-comments').value = mapping.comments; }); }
