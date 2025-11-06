@@ -234,7 +234,10 @@
                 margin-right: 10px;
                 border-radius: 4px;
             }
-
+        .link {
+            text-decoration: none;
+            color: black;
+        }
         .modal {
             display: none;
             position: fixed;
@@ -569,7 +572,7 @@
             </div>
             <div class="nav-item">
                 <a href="#" id="help-link" style="color: var(--light-text); text-decoration: none; display: block;">Help</a>
-                <div id="help-content"><h4>About Security</h4><ul><li><strong>Master Password:</strong> Your data is encrypted with a key derived from this password. It is never stored.</li><li><strong>Local Cache:</strong> Data can be cached in your browser for convenience. It remains fully encrypted with your Master Password.</li><li><strong>AES-256-GCM Encryption:</strong> Industry-standard authenticated encryption ensures both confidentiality and integrity of your data.</li><li><strong>Split-File Storage:</strong> Saving as Split Packets provides maximum security. An attacker needs your password AND both files.</li><li><strong>No Server Storage:</strong> Your data is never sent to a server. It stays in your browser and the files you save.</li></ul></div>
+                <div id="help-content"><h4>About Security</h4><ul><li><strong>Master Password:</strong> Your data is encrypted with a key derived from this password. It is never stored.</li><li><strong>Local Cache:</strong> Data can be cached in your browser for convenience. It remains fully encrypted with your Master Password.</li><li><strong>AES-256-GCM Encryption:</strong> Industry-standard authenticated encryption ensures both confidentiality and integrity of your data.</li><li><strong>Split-File Storage:</strong> Saving as Split Packets provides maximum security. An attacker needs your password AND both files.</li><li><strong>No Server Storage:</strong> Your data is never sent to a server. It stays in your browser and the files you save.</li><li><strong>Github:</strong><a class="link" target="_blank" href="https://github.com/13742X/Whdigo-standalone/blob/main/README.md">Readme and code</a></li></ul></div>
             </div>
         </nav>
 
@@ -792,7 +795,7 @@
                     } else {
                         // --- START: MODIFIED LOGIC FOR SPLIT FILES ---
                         if (uploadedFiles.length !== 2) throw new Error("Split mode requires exactly two files.");
-                        
+
                         // Parse both files first
                         const packetA = JSON.parse(await uploadedFiles[0].text());
                         const packetB = JSON.parse(await uploadedFiles[1].text());
@@ -804,14 +807,14 @@
                         // Assign packets to the correct order based on their 'part' property
                         const packet1 = packetA.part === 1 ? packetA : packetB;
                         const packet2 = packetB.part === 2 ? packetB : packetA;
-                        
+
                         // Reassemble the ciphertext in the correct order
                         ciphertext = new Uint8Array([
-                            ...atob(packet1.payload).split('').map(c => c.charCodeAt(0)), 
+                            ...atob(packet1.payload).split('').map(c => c.charCodeAt(0)),
                             ...atob(packet2.payload).split('').map(c => c.charCodeAt(0))
                         ]);
-                        
-                        salt = hexToBytes(packet1.salt); 
+
+                        salt = hexToBytes(packet1.salt);
                         iv = hexToBytes(packet1.iv);
                         // --- END: MODIFIED LOGIC ---
                     }
