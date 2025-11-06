@@ -790,28 +790,44 @@
                         ciphertext = new Uint8Array(atob(packet.payload).split('').map(c => c.charCodeAt(0)));
                         salt = hexToBytes(packet.salt); iv = hexToBytes(packet.iv);
                     } else {
+                        // --- START: MODIFIED LOGIC FOR SPLIT FILES ---
                         if (uploadedFiles.length !== 2) throw new Error("Split mode requires exactly two files.");
-                        const file1Text = await uploadedFiles[0].text(); const file2Text = await uploadedFiles[1].text();
-                        const packet1 = JSON.parse(file1Text); const packet2 = JSON.parse(file2Text);
-                        if (packet1.salt !== packet2.salt || packet1.iv !== packet2.iv) throw new Error('Data packets do not match.');
-                        ciphertext = new Uint8Array([...atob(packet1.payload).split('').map(c => c.charCodeAt(0)), ...atob(packet2.payload).split('').map(c => c.charCodeAt(0))]);
-                        salt = hexToBytes(packet1.salt); iv = hexToBytes(packet1.iv);
+                        
+                        // Parse both files first
+                        const packetA = JSON.parse(await uploadedFiles[0].text());
+                        const packetB = JSON.parse(await uploadedFiles[1].text());
+
+                        // Check for validity and identify parts
+                        if (packetA.salt !== packetB.salt || packetA.iv !== packetB.iv) throw new Error('Data packets do not match.');
+                        if (![1, 2].includes(packetA.part) || packetA.part === packetB.part) throw new Error('Invalid or duplicate packet parts.');
+
+                        // Assign packets to the correct order based on their 'part' property
+                        const packet1 = packetA.part === 1 ? packetA : packetB;
+                        const packet2 = packetB.part === 2 ? packetB : packetA;
+                        
+                        // Reassemble the ciphertext in the correct order
+                        ciphertext = new Uint8Array([
+                            ...atob(packet1.payload).split('').map(c => c.charCodeAt(0)), 
+                            ...atob(packet2.payload).split('').map(c => c.charCodeAt(0))
+                        ]);
+                        
+                        salt = hexToBytes(packet1.salt); 
+                        iv = hexToBytes(packet1.iv);
+                        // --- END: MODIFIED LOGIC ---
                     }
                     encryptionKey = await deriveKey(masterPassword, salt);
                     const decryptedJson = await decryptData(encryptionKey, { ciphertext, iv });
                     const rawData = JSON.parse(decryptedJson);
-                    appData = rawData.data;
+                    appData = rawData.data; // The actual data is in a sub-object
                     if (!appData.apps || !appData.signons || !appData.mappings) throw new Error("Invalid data structure");
-                    normalizeDataIds(appData);
                     showToast('Data successfully decrypted.');
-                    initMainApp(true);
+                    initMainApp(true); // From file, prompt to cache
                 } catch (error) {
                     console.error('Decryption failed:', error);
                     $('#unlock-message').textContent = `Decryption failed. ${error.message}`;
                     encryptionKey = null; appData = null; masterPassword = ''; uploadedFiles = []; $('#file-list').innerHTML = '';
                 }
             }
-
             async function handleUnlockFromCache() {
                 const password = $('#master-password-cache').value;
                 $('#unlock-message').textContent = '';
