@@ -1,3 +1,4 @@
+
 {
   "name": "Offline ultra secure Password Manager",
   "short_name": "WHDIGO Manager",
@@ -5,7 +6,7 @@
   "display": "standalone",
   "background_color": "#f8f9fa",
   "theme_color": "#007bff",
-  "description": "An application to map encrypted passwords.",
+  "description": "An application to map apps to passwords.",
   "icons": [
     {
       "src": "https://app.whdigo.com/icons/icon-192.png",

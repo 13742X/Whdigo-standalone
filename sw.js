@@ -1,11 +1,14 @@
-const CACHE_NAME = 'encrypted-mapper-cache-v1-5';
+
+const CACHE_NAME = 'encrypted-mapper-cache-v1-21';
 const urlsToCache = [
     '/',
     '/index.html',
     '/icons/icon-192.png',
     '/icons/icon-512.png',
     '/icons/whdigo-transparent-square-logo.png',
-    '/icons/whdigo-words-transparent.png'
+    '/icons/whdigo-words-transparent.png',
+    '/libs/argon2.wasm',
+    '/libs/argon2-bundled.min.js'
 ];
 
 self.addEventListener('install', event => {

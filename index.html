@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,21 +6,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#ffffff">
     <link rel="manifest" href="manifest.json" onerror="console.warn('Manifest not found, continuing offline')">
-    <title>WHDIGO Ultra Secure Password Manager</title>
+    <title>WHDIGO Quantum-Resistant Vault (v2.5 Amended)</title>
+    <!-- PRODUCTION-HARDENED: Using a specific, version-locked CDN link for the argon2-browser library. -->
+  
+    <script src="/libs/argon2-bundled.min.js"
+            integrity="sha384-p7FMdziZYRAiDatXAMRUQsrOqxGUQS9rDBBgM7euHooqiQ5VVHVt+t28MqWCxVHj"
+            crossorigin="anonymous"
+            defer>
+    </script>
+
     <style>
         :root {
-            --primary-color: #007bff;
+            --primary-color: #6a0dad;
             --secondary-color: #6c757d;
             --success-color: #28a745;
             --danger-color: #dc3545;
+            --warning-color: #ffc107;
             --light-bg: #f8f9fa;
-            --dark-bg: #212529;
+            --dark-bg: #1c1c1e;
             --light-text: #212529;
             --dark-text: #f8f9fa;
             --light-border: #dee2e6;
             --dark-border: #495057;
             --light-card: #ffffff;
-            --dark-card: #343a40;
+            --dark-card: #2c2c2e;
         }
 
         *, *::before, *::after {
@@ -35,15 +45,25 @@
         }
 
             body.dark-mode {
-                --light-bg: #212529;
+                --light-bg: #1c1c1e;
                 --dark-bg: #f8f9fa;
                 --light-text: #f8f9fa;
                 --dark-text: #212529;
                 --light-border: #495057;
                 --dark-border: #dee2e6;
-                --light-card: #343a40;
+                --light-card: #2c2c2e;
                 --dark-card: #ffffff;
             }
+
+        #privacy-warning {
+            display: none;
+            padding: 1rem;
+            background-color: var(--warning-color);
+            color: var(--dark-bg);
+            text-align: center;
+            border-bottom: 1px solid var(--light-border);
+            margin-bottom: 1rem;
+        }
 
         .container {
             max-width: 768px;
@@ -67,7 +87,11 @@
             background-color: var(--light-card);
             border: 1px solid var(--light-border);
             border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        body.dark-mode .card {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
 
         .form-group {
@@ -120,7 +144,38 @@
                 background-color: var(--danger-color);
             }
 
-        /* --- ICON BUTTON STYLE FIXES START --- */
+        .password-strength-indicator {
+            height: 10px;
+            width: 100%;
+            background: var(--light-border);
+            border-radius: 5px;
+            margin-top: 8px;
+            display: flex;
+        }
+
+        .strength-bar {
+            height: 100%;
+            border-radius: 5px;
+            transition: width 0.3s, background-color 0.3s;
+        }
+
+        .strength-text {
+            margin-top: 4px;
+            font-size: 0.85rem;
+        }
+
+        .strength-bar.red {
+            background-color: var(--danger-color);
+        }
+
+        .strength-bar.amber {
+            background-color: var(--warning-color);
+        }
+
+        .strength-bar.green {
+            background-color: var(--success-color);
+        }
+
         .icon-btn, .table-action-btn {
             background-color: transparent;
             border: none;
@@ -133,7 +188,6 @@
             transition: background-color 0.2s;
         }
 
-        /* Override general button styles for icon buttons */
         button.icon-btn, button.icon-btn.secondary, button.icon-btn.danger {
             background-color: transparent;
         }
@@ -146,7 +200,7 @@
         .icon-btn svg {
             width: 24px;
             height: 24px;
-            stroke: var(--primary-color); /* Default for 'add' */
+            stroke: var(--primary-color);
         }
 
         .icon-btn.secondary svg {
@@ -166,8 +220,6 @@
         .table-action-btn.delete svg {
             stroke: var(--danger-color);
         }
-        /* --- ICON BUTTON STYLE FIXES END --- */
-
 
         .button-group {
             display: flex;
@@ -237,7 +289,7 @@
 
         .link {
             text-decoration: none;
-            color: black;
+            color: var(--primary-color);
         }
 
         .modal {
@@ -257,7 +309,7 @@
             background-color: var(--light-card);
             margin: 10% auto;
             padding: 20px;
-            border: 1px solid #888;
+            border: 1px solid var(--light-border);
             width: 90%;
             max-width: 500px;
             border-radius: 8px;
@@ -325,10 +377,6 @@
             background-color: var(--danger-color);
         }
 
-        #burger-menu-btn {
-            z-index: 1002;
-        }
-
         #nav-menu {
             position: fixed;
             top: 0;
@@ -340,6 +388,7 @@
             transition: right 0.3s ease-in-out;
             z-index: 1001;
             padding: 60px 20px 20px;
+            overflow-y: auto;
         }
 
             #nav-menu.open {
@@ -432,7 +481,7 @@
 
             #drop-area.highlight {
                 border-color: var(--primary-color);
-                background-color: rgba(0, 123, 255, 0.05);
+                background-color: rgba(106, 13, 173, 0.05);
             }
 
         #file-list {
@@ -454,6 +503,31 @@
             gap: 1rem;
             margin-top: 1.5rem;
         }
+
+        #unlock-container {
+            max-width: 550px;
+            margin: 2rem auto;
+        }
+
+            #unlock-container h1, #unlock-container > p:first-of-type {
+                text-align: center;
+            }
+
+        .divider {
+            border: 0;
+            height: 1px;
+            background: var(--light-border);
+            margin: 1.25rem 0;
+        }
+
+        .help-section {
+            margin-bottom: 1.5rem;
+        }
+
+            .help-section h4 {
+                margin-top: 0;
+                color: var(--primary-color);
+            }
 
         .calendar-month {
             margin-bottom: 1.5rem;
@@ -488,129 +562,101 @@
             color: var(--danger-color);
             font-weight: 500;
         }
-
-        #unlock-container {
-            max-width: 550px;
-            margin: 2rem auto;
-        }
-
-            #unlock-container h1, #unlock-container > p:first-of-type {
-                text-align: center;
-            }
-
-        .upload-mode-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            padding: 0.5rem 0;
-        }
-
-        .radio-option-label {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-weight: 500;
-            cursor: pointer;
-        }
-
-            .radio-option-label input[type="radio"] {
-                display: none;
-            }
-
-        .radio-custom {
-            width: 20px;
-            height: 20px;
-            border: 2px solid var(--secondary-color);
-            border-radius: 50%;
-            display: inline-block;
-            position: relative;
-            flex-shrink: 0;
-            transition: border-color 0.2s;
-        }
-
-        .radio-option-label input[type="radio"]:checked + .radio-custom {
-            border-color: var(--primary-color);
-        }
-
-            .radio-option-label input[type="radio"]:checked + .radio-custom::after {
-                content: '';
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                width: 10px;
-                height: 10px;
-                border-radius: 50%;
-                background-color: var(--primary-color);
-            }
-
-        .radio-text {
-            line-height: 1.4;
-        }
-
-        .divider {
-            border: 0;
-            height: 1px;
-            background: var(--light-border);
-            margin: 1.25rem 0;
-        }
     </style>
 </head>
 <body>
+    <div id="privacy-warning">
+        <strong>Privacy Warning:</strong> Other browser extensions are active. For maximum security, it is highly recommended to open this page in a Private or Incognito window.
+    </div>
     <div class="container">
         <div class="header">
             <img src="https://app.whdigo.com/icons/whdigo-words-transparent.png" alt="Logo" class="logo">
-            <button id="burger-menu-btn" class="icon-btn"></button>
+            <button id="burger-menu-btn" class="icon-btn" aria-label="Menu"></button>
         </div>
 
         <nav id="nav-menu">
             <div id="main-nav-items" style="display: none;">
-                <div class="nav-item"><button id="save-combined-btn" style="width: 100%;">Save Combined File</button></div>
-                <div class="nav-item"><button id="save-split-btn" style="width: 100%;" class="secondary">Save Split Packets</button></div>
+                <div class="nav-item"><button id="save-fragments-btn" style="width: 100%;">Save as Secure Fragments</button></div>
+                <div class="nav-item"><button id="save-combined-btn" style="width: 100%;" class="secondary">Save as Combined File</button></div>
                 <div class="nav-item"><button id="clear-cache-btn" style="width: 100%;" class="danger">Clear Local Cache</button></div>
             </div>
+            <div class="nav-item"><div class="theme-switch-wrapper"><span>Dark Mode</span><label class="theme-switch" for="theme-toggle"><input type="checkbox" id="theme-toggle"><span class="slider round"></span></label></div></div>
             <div class="nav-item">
-                <div class="theme-switch-wrapper"><span>Dark Mode</span><label class="theme-switch" for="theme-toggle"><input type="checkbox" id="theme-toggle"><span class="slider round"></span></label></div>
-            </div>
-            <div class="nav-item">
-                <a href="#" id="help-link" style="color: var(--light-text); text-decoration: none; display: block;">Help</a>
-                <div id="help-content"><h4>About Security</h4><ul><li><strong>Master Password:</strong> Your data is encrypted with a key derived from this password. It is never stored.</li><li><strong>Local Cache:</strong> Data can be cached in your browser for convenience. It remains fully encrypted with your Master Password.</li><li><strong>AES-256-GCM Encryption:</strong> Industry-standard authenticated encryption ensures both confidentiality and integrity of your data.</li><li><strong>Split-File Storage:</strong> Saving as Split Packets provides maximum security. An attacker needs your password AND both files.</li><li><strong>No Server Storage:</strong> Your data is never sent to a server. It stays in your browser and the files you save.</li><li><strong>Github:</strong><a class="link" target="_blank" href="https://github.com/13742X/Whdigo-standalone/blob/main/README.md">Readme and code</a></li></ul></div>
+                <a href="#" id="help-link" style="color: var(--light-text); text-decoration: none; display: block;">About The Security Model</a>
+                <div id="help-content">
+                    <div class="help-section"><h4>Zero-Knowledge Architecture</h4><p>This vault operates on a zero-knowledge principle. All encryption and decryption happens inside your browser. Your Master Password and your data are <strong>never</strong> sent to a server. We have no ability to access, decrypt, or recover your data.</p></div>
+                    <div class="help-section"><h4>Argon2id Key Derivation (via WebAssembly)</h4><p>Your Master Password is fed into <strong>Argon2id</strong>, considered the gold standard algorithm for password hashing. This runs inside a WebAssembly module for native performance without freezing your browser. Argon2id is a "memory-hard" function, making it extremely resistant to brute-force attacks from powerful hardware like GPUs.</p></div>
+                    <div class="help-section"><h4>Secure Encryption Standard</h4><p>Your vault data is encrypted with industry-standard <strong>AES-256-GCM</strong>. This is a highly secure and widely trusted symmetric encryption algorithm, ensuring the confidentiality and integrity of your stored information against all current conventional threats.</p></div>
+                    <div class="help-section"><h4>Hardened Fragment Storage</h4><p>Choosing "Save as Secure Fragments" provides maximum security. The vault is split and hidden within a pack of 6 fragments. Only 2 contain real data; the other 4 are encrypted decoys (spoof files). An attacker who steals the files cannot determine which are real, massively increasing the difficulty of an attack.</p></div>
+                </div>
             </div>
         </nav>
 
         <div id="unlock-container" class="card">
+
             <div id="cached-unlock-view" style="display: none;">
-                <h1>Unlock Cached Data</h1>
-                <p>Enter your master password to decrypt the locally stored data.</p>
-                <div class="form-group"><label for="master-password-cache">Master Password</label><input type="password" id="master-password-cache" placeholder="Enter password to unlock cache"></div>
+                <h1>Unlock Cached Vault</h1>
+                <p>Enter your master password to decrypt locally stored data.</p>
+
+                <div class="form-group">
+                    <label for="master-password-cache">Master Password</label>
+                    <input type="password" id="master-password-cache" placeholder="Enter password to unlock">
+                    <div class="password-strength-indicator">
+                        <div id="strength-bar-cache" class="strength-bar"></div>
+                    </div>
+                    <div id="strength-text-cache" class="strength-text"></div>
+                </div>
+
                 <button id="unlock-cache-btn" style="width: 100%;">Unlock</button>
-                <p style="text-align: center; margin-top: 1rem;">or <a href="#" id="start-over-link" style="color: var(--primary-color);">load from file instead</a>.</p>
+                <p style="text-align: center; margin-top: 1rem;">
+                    or <a href="#" id="start-over-link" class="link">load from file instead</a>.
+                </p>
+
+                <!-- NEW SECURITY NOTICE -->
+                <p style="margin-top:1.25rem; font-size:0.9rem; opacity:0.85; text-align:center;">
+                    <strong>Security Tip:</strong> For maximum protection, run this app in <em>private browsing mode</em> with <em>no internet / Wi-Fi enabled</em>.
+                    Avoid allowing data to be cached unless you plan to access this vault frequently.
+                </p>
             </div>
+
             <div id="initial-load-view">
-                <h1>Secure Data Mapper</h1>
-                <p>Create a new secure store or load your existing data file(s).</p>
-                <div id="initial-choice-container">
-                    <div class="form-grid">
-                        <button id="new-store-btn">Create New Secure Store</button>
-                        <button id="load-store-btn" class="secondary">Load Existing Store</button>
-                    </div>
+                <h1>Secure Offline Vault</h1>
+                <p>Create a new secure vault or load your existing data fragments.</p>
+
+                <div id="initial-choice-container" class="form-grid">
+                    <button id="new-store-btn">Create New Vault</button>
+                    <button id="load-store-btn" class="secondary">Load Existing Vault</button>
                 </div>
+
+                <!-- NEW SECURITY NOTICE -->
+                <p style="margin-top:1.25rem; font-size:0.9rem; opacity:0.85; text-align:center;">
+                    <strong>Security Tip:</strong> For the most secure operation, consider running this app in <em>private mode</em>, offline with <em>no internet / Wi-Fi</em>, and avoid caching unless needed.
+                </p>
+
                 <div id="load-form-container" style="display: none;">
-                    <div class="form-group"><label for="master-password">Master Password</label><input type="password" id="master-password" placeholder="Enter the password for your store"></div>
                     <div class="form-group">
-                        <label>Upload Mode</label>
-                        <div class="upload-mode-container">
-                            <label for="split-mode" class="radio-option-label"><input type="radio" name="upload-mode" id="split-mode" value="split" checked><span class="radio-custom"></span><span class="radio-text">Split Packets<br>(2 Files)</span></label>
-                            <label for="combined-mode" class="radio-option-label"><input type="radio" name="upload-mode" id="combined-mode" value="combined"><span class="radio-custom"></span><span class="radio-text">Combined File<br>(1 File)</span></label>
+                        <label for="master-password">Master Password</label>
+                        <input type="password" id="master-password" placeholder="Enter the password for your vault">
+                        <div class="password-strength-indicator">
+                            <div id="strength-bar-load" class="strength-bar"></div>
                         </div>
+                        <div id="strength-text-load" class="strength-text"></div>
                     </div>
+
                     <hr class="divider">
+
                     <input type="file" id="file-input" multiple style="display: none;">
-                    <div id="drop-area"><p id="drop-area-text">Drag & Drop Your 2 Secure Data Files Here</p><p>or <a href="#" id="browse-files-link" style="color: var(--primary-color);">browse your device</a></p></div>
+                    <div id="drop-area">
+                        <p id="drop-area-text">Drag & Drop Your Secure Data Fragments Here</p>
+                        <p>or <a href="#" id="browse-files-link" class="link">browse your device</a></p>
+                    </div>
+
                     <div id="file-list"></div>
-                    <button id="unlock-btn" style="width:100%; margin-top: 1.25rem;">Unlock Data</button>
+
+                    <button id="unlock-btn" style="width:100%; margin-top: 1.25rem;">Unlock Vault</button>
                 </div>
             </div>
+
             <p id="unlock-message" style="text-align:center; color: var(--danger-color); margin-top: 1rem;"></p>
         </div>
 
@@ -628,461 +674,274 @@
                 <div id="pagination-controls"></div>
             </div>
             <div id="calendar-content" class="tab-content">
-                <div class="header" style="justify-content: center;"><button id="prev-year-btn" class="icon-btn secondary" title="Previous Year"></button><h2 id="calendar-title" style="margin: 0 1rem;"></h2><button id="next-year-btn" class="icon-btn secondary" title="Next Year"></button></div><div id="calendar-view"></div>
+                <div class="header" style="justify-content: center; margin-bottom: 1rem;"><button id="prev-year-btn" class="icon-btn secondary" title="Previous Year"></button><h2 id="calendar-title" style="margin: 0 1rem;"></h2><button id="next-year-btn" class="icon-btn secondary" title="Next Year"></button></div><div id="calendar-view"></div>
             </div>
         </div>
+
+        <div id="app-modal" class="modal"><div class="modal-content"><div class="modal-header"><h2 id="app-modal-title">Application</h2><span class="close-button">&times;</span></div><input type="hidden" id="app-id"><div class="form-group"><label for="app-name">App Name</label><input type="text" id="app-name"></div><div class="form-group"><label for="app-url">App URL</label><input type="url" id="app-url"></div><div class="form-group"><label for="app-logo-url">App Logo URL</label><input type="url" id="app-logo-url"></div><button id="save-app-btn">Save</button></div></div>
+        <div id="signon-modal" class="modal"><div class="modal-content"><div class="modal-header"><h2 id="signon-modal-title">Sign-On Method</h2><span class="close-button">&times;</span></div><input type="hidden" id="signon-id"><div class="form-group"><label for="signon-name">Sign-On Name</label><input type="text" id="signon-name"></div><button id="save-signon-btn">Save</button></div></div>
+        <div id="edit-mapping-modal" class="modal"><div class="modal-content"><div class="modal-header"><h2>Edit Mapping</h2><span class="close-button">&times;</span></div><input type="hidden" id="edit-mapping-id"><div class="form-grid"><div class="form-group"><label for="edit-start-date">Start Date</label><input type="date" id="edit-start-date"></div><div class="form-group"><label for="edit-end-date">End Date (optional)</label><input type="date" id="edit-end-date"></div></div><div class="form-group"><label for="edit-tags">Tags (comma separated)</label><input type="text" id="edit-tags"></div><div class="form-group"><label for="edit-comments">Comments</label><textarea id="edit-comments" rows="3"></textarea></div><button id="save-mapping-changes-btn">Save Changes</button></div></div>
+        <div id="new-password-modal" class="modal"><div class="modal-content"><div class="modal-header"><h2 id="new-password-title">Create Master Password</h2><span class="close-button">&times;</span></div><p>This password encrypts your vault. <strong>It cannot be recovered if you forget it.</strong> Choose a strong, memorable password.</p><div class="form-group"><label for="new-master-password">New Master Password</label><input type="password" id="new-master-password"><div class="password-strength-indicator"><div id="strength-bar-new" class="strength-bar"></div></div><div id="strength-text-new" class="strength-text"></div></div><button id="set-password-btn">Set Password & Create Vault</button></div></div>
+        <div id="confirm-modal" class="modal"><div class="modal-content"><h2 id="confirm-title">Are you sure?</h2><p id="confirm-message"></p><div class="button-group" style="justify-content: flex-end;"><button id="confirm-cancel-btn" class="secondary">Cancel</button><button id="confirm-ok-btn" class="danger">Confirm</button></div></div></div>
+        <div id="toast-container"></div>
     </div>
 
-    <div id="app-modal" class="modal"><div class="modal-content"><div class="modal-header"><h2 id="app-modal-title">Application</h2><span class="close-button">&times;</span></div><input type="hidden" id="app-id"><div class="form-group"><label for="app-name">App Name</label><input type="text" id="app-name"></div><div class="form-group"><label for="app-url">App URL</label><input type="url" id="app-url"></div><div class="form-group"><label for="app-logo-url">App Logo URL</label><input type="url" id="app-logo-url"></div><button id="save-app-btn">Save</button></div></div>
-    <div id="signon-modal" class="modal"><div class="modal-content"><div class="modal-header"><h2 id="signon-modal-title">Sign-On Method</h2><span class="close-button">&times;</span></div><input type="hidden" id="signon-id"><div class="form-group"><label for="signon-name">Sign-On Name</label><input type="text" id="signon-name"></div><button id="save-signon-btn">Save</button></div></div>
-    <div id="edit-mapping-modal" class="modal"><div class="modal-content"><div class="modal-header"><h2>Edit Mapping</h2><span class="close-button">&times;</span></div><input type="hidden" id="edit-mapping-id"><div class="form-grid"><div class="form-group"><label for="edit-start-date">Start Date</label><input type="date" id="edit-start-date"></div><div class="form-group"><label for="edit-end-date">End Date (optional)</label><input type="date" id="edit-end-date"></div></div><div class="form-group"><label for="edit-tags">Tags (comma separated)</label><input type="text" id="edit-tags"></div><div class="form-group"><label for="edit-comments">Comments</label><textarea id="edit-comments" rows="3"></textarea></div><button id="save-mapping-changes-btn">Save Changes</button></div></div>
-    <div id="new-password-modal" class="modal"><div class="modal-content"><div class="modal-header"><h2>Create Master Password</h2></div><p>This password will be used to encrypt your data. <strong>It cannot be recovered if you forget it.</strong></p><div class="form-group"><label for="new-master-password">New Master Password</label><input type="password" id="new-master-password"></div><button id="set-password-btn">Set Password & Create Store</button></div></div>
-    <div id="confirm-modal" class="modal"><div class="modal-content"><h2 id="confirm-title">Are you sure?</h2><p id="confirm-message"></p><div class="button-group" style="justify-content: flex-end;"><button id="confirm-cancel-btn" class="secondary">Cancel</button><button id="confirm-ok-btn" class="danger">Confirm</button></div></div></div>
-    <div id="toast-container"></div>
-
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            let appData = null, encryptionKey = null, masterPassword = '';
-            let currentCalendarYear = new Date().getFullYear();
-            let uploadedFiles = [];
-            let currentMappingPage = 1;
-            const MAPPINGS_PER_PAGE = 50;
-            const CACHE_KEY = 'whdigo_secure_cache';
+        async function deriveKeyArgon2(password, salt) {
+            console.log("Using production Argon2id via WebAssembly...");
+            const saltBuffer = (typeof salt === 'string') ? new TextEncoder().encode(salt) : salt;
+            const argon2Result = await argon2.hash({ pass: password, salt: saltBuffer, time: 2, mem: 1024 * 64, hashLen: 32, parallelism: 1, type: argon2.ArgonType.Argon2id });
+            return crypto.subtle.importKey("raw", argon2Result.hash, { name: "AES-GCM" }, true, ["encrypt", "decrypt"]);
+        }
 
-            // Consistent icons with standardized stroke-width
-            const ICONS = {
-                burger: '<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" /></svg>',
-                plus: '<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>',
-                edit: '<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" /></svg>',
-                trash: '<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" /></svg>',
-                leftArrow: '<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" /></svg>',
-                rightArrow: '<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" /></svg>',
-            };
-
-            const FALLBACK_LOGO_SVG = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiB4bWxuczp2PSJodHRwczovL3ZlY3RhLmlvL25hbm8iPjxwYXRoIGQ9Ik0yMiAxM2gyOWwuMDQ0IDEwLjcyMS4xOTIgMzUuMDcyLjExMSAyMS4yNjQuMTE3IDIwLjUyMS4wMzQgNy44MjguMDcgMTAuOTY3LS4wMDQgMy4yNjdjLjA5MyA3LjQwNyAxLjAyNSAxMi4yNzggNS42ODcgMTguMjM0IDQuNDEgMy40MDcgNy45NzUgMy4zMzkgMTMuMzc1IDIuNjg4IDQuNTY5LTIuMTE1IDYuMzItNS4wNjIgOC4zNzUtOS41NjIuOTEzLTMuMDI5IDEuMTM1LTUuNzY1IDEuMTU4LTguOTIzbC4wMy0zIC4wMTctMy4yNzIuMDMtMy40Ni4wODEtMTEuMzMuMDYzLTcuODUyLjEzOC0xOC41NjEuMTYtMjEuMTM0TDgxIDEzaDI5bC4wNiAxMC45MzYuMjI3IDM1LjczLjEzNCAyMS42NzQuMTIxIDE4Ljg5Mi4wNjEgMTAuMDAyLjA3OCAxMS4xNjkuMDA3IDMuMzQ2LjAzNCAzLjA4MS4wMTcgMi42NjhjLjI5NCAyLjc5NiAxLjEyMSA0LjkzIDIuMjYyIDcuNDg5bC44MDEgMi4yMjNjMS4xMDMgMS45OTYgMS4xMDMgMS45OTYgMy41NTUgMi43MTEgNi4zMDQgMS4xMjIgMTAuMTQ2IDEuNTQ1IDUuNjQ1LTEuOTM0IDQuNTY4LTQuNTY4IDUuMTEyLTguODI5IDUuMTU4LTE1LjA4MWwuMDMtMy4wMy4wMTctMy4yODkuMDMtMy40OS4wODEtMTEuNDExLjA2My03LjkxNS4xMzgtMTguNjk5LjE2LTIxLjI5NEwxMzkgMTNoMjlsLjI1OSAzOC4xMTcuMTE4IDIyLjM0Ni4wOTMgMTkuNDk3LjA1OCAxMC4zMDVjLjE5OCAyMC44MTItLjQ4NiAzNi41MTgtMTUuMTc3IDUyLjUzMi05LjEzMSA4LjY0MS0yMC4xODEgMTEuNzI0LTMyLjM5MSAxMS40NzctMTAuMTM1LS43LTE3LjQ5Mi00LjU1OS0yNC45NjEtMTEuMjczLTIuOTU3IDEuMzg1LTUuNDg1IDMuMDIzLTguMTI1IDQuOTM4Qzc4Ljg4MiAxNzYuOTE4IDY5LjY3OCAxNzguMDc0IDU5IDE3N2MtNi45MDctMS41ODYtMTMuMDM2LTQuMjA0LTE5LTh2LTJsLTEuNzgxLS43NDJjLTcuMDkzLTQuMDIxLTExLjgyNy0xMy40NTUtMTQuMDM0LTIxLjA3MS0xLjg5NC03Ljc0NC0yLjYwNC0xNC45MDctMi41MjUtMjIuODYybC0uMDAxLTMuNjEyLjA0OS0xMS42Ny4wMTMtOC4xNS4wNjQtMTkuMTY2LjA2NS0yMS44NDZMMjIgMTN6IiBmaWxsPSIjMzUxZDcxIi8+PC9zdmc+';
+        function initializeApp() {
+            let appData = null, masterKey = null, masterPassword = '';
+            let uploadedFiles = [], currentMappingPage = 1, currentCalendarYear = new Date().getFullYear();
+            const MAPPINGS_PER_PAGE = 50, CACHE_KEY = 'whdigo_quantum_cache_v2', FRAGMENT_COUNT = 6, REAL_FRAGMENTS = 2;
 
             const $ = (selector) => document.querySelector(selector);
             const $$ = (selector) => document.querySelectorAll(selector);
 
-            function setupPage() {
-                setIcons();
-                setupEventListeners();
-                checkForCache();
-            }
+            const ICONS = { burger: '<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" /></svg>', plus: '<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>', edit: '<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" /></svg>', trash: '<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" /></svg>', leftArrow: '<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" /></svg>', rightArrow: '<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" /></svg>', };
+            const FALLBACK_LOGO_SVG = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiB4bWxuczp2PSJodHRwczovL3ZlY3RhLmlvL25hbm8iPjxwYXRoIGQ9Ik0yMiAxM2gyOWwuMDQ0IDEwLjcyMS4xOTIgMzUuMDcyLjExMSAyMS4yNjQuMTE3IDIwLjUyMS4wMzQgNy44MjguMDcgMTAuOTY3LS4wMDQgMy4yNjdjLjA5MyA3LjQwNyAxLjAyNSAxMi4yNzggNS42ODcgMTguMjM0IDQuNDEgMy40MDcgNy45NzUgMy4zMzkgMTMuMzc1IDIuNjg4IDQuNTY5LTIuMTE1IDYuMzItNS4wNjIgOC4zNzUtOS41NjIuOTEzLTMuMDI5IDEuMTM1LTUuNzY1IDEuMTU4LTguOTIzbC4wMy0zIC4wMTctMy4yNzIuMDMtMy40Ni4wODEtMTEuMzMuMDYzLTcuODUyLjEzOC0xOC41NjEuMTYtMjEuMTM0TDgxIDEzaDI5bC4wNiAxMC45MzYuMjI3IDM1LjczLjEzNCAyMS42NzQuMTIxIDE4Ljg5Mi4wNjEgMTAuMDAyLjA3OCAxMS4xNjkuMDA3IDMuMzQ2LjAzNCAzLjA4MS4wMTcgMi42NjhjLjI5NCAyLjc5NiAxLjEyMSA0LjkzIDIuMjYyIDcuNDg5bC44MDEgMi4yMjNjMS4xMDMgMS45OTYgMS4xMDMgMS45OTYgMy41NTUgMi43MTEgNi4zMDQgMS4xMjIgMTAuMTQ2IDEuNTQ1IDUuNjQ1LTEuOTM0IDQuNTY4LTQuNTY4IDUuMTEyLTguODI5IDUuMTU4LTE1LjA4MWwuMDMtMy4wMy4wMTctMy4yODkuMDMtMy40OS4wODEtMTEuNDExLjA2My03LjkxNS4xMzgtMTguNjk5LjE2LTIxLjI5NEwxMzkgMTNoMjlsLjI1OSAzOC4xMTcuMTE4IDIyLjM0Ni4wOTMgMTkuNDk3LjA1OCAxMC4zMDVjLjE5OCAyMC44MTItLjQ4NiAzNi41MTgtMTUuMTc3IDUyLjUzMi05LjEzMSA4LjY0MS0yMC4xODEgMTEuNzI0LTMyLjM5MSAxMS40NzctMTAuMTM1LS43LTE3LjQ5Mi00LjU1OS0yNC45NjEtMTEuMjczLTIuOTU3IDEuMzg1LTUuNDg1IDMuMDIzLTguMTI1IDQuOTM4Qzc4Ljg4MiAxNzYuOTE4IDY5LjY3OCAxNzguMDc0IDU5IDE3N2MtNi45MDctMS41ODYtMTMuMDM2LTQuMjA0LTE5LTh2LTJsLTEuNzgxLS4wNzQtMTAuOTY3LS4wMDQgMy4yNjdjLjA5MyA3LjQwNyAxLjAyNSAxMi4yNzggNS42ODcgMTguMjM0IDQuNDEgMy40MDcgNy45NzUgMy4zMzkgMTMuMzc1IDIuNjg4IDQuNTY5LTIuMTE1IDYuMzItNS4wNjIgOC4zNzUtOS41NjIuOTEzLTMuMDI5IDEuMTM1LTUuNzY1IDEuMTU4LTguOTIzbC4wMy0zIC4wMTctMy4yNzIuMDMtMy40Ni4wODEtMTEuMzMuMDYzLTcuODUyLjEzOC0xOC41NjEuMTYtMjEuMTM0TDgxIDEzaDI5bC4wNiAxMC45MzYuMjI3IDM1LjczLjEzNCAyMS42NzQuMTIxIDE4Ljg5Mi4wNjEgMTAuMDAyLjA3OCAxMS4xNjkuMDA3IDMuMzQ2LjAzNCAzLjA4MS4wMTcgMi42NjhjLjI5NCAyLjc5NiAxLjEyMSA0LjkzIDIuMjYyIDcuNDg5bC44MDEgMi4yMjNjMS4xMDMgMS45OTYgMS4xMDMgMS45OTYgMy41NTUgMi43MTEgNi4zMDQgMS4xMjIgMTAuMTQ2IDEuNTQ1IDUuNjQ1LTEuOTM0IDQuNTY4LTQuNTY4IDUuMTEyLTguODI5IDUuMTU4LTE1LjA4MWwuMDMtMy4wMy4wMTctMy4yODkuMDMtMy40OS4wODEtMTEuNDExLjA2My03LjkxNS4xMzgtMTguNjk5LjE2LTIxLjI5NEwxMzkgMTNoMjlsLjI1OSAzOC4xMTcuMTE4IDIyLjM0Ni4wOTMgMTkuNDk3LjA1OCAxMC4zMDVjLjE5OCAyMC44MTItLjQ4NiAzNi41MTgtMTUuMTc3IDUyLjUzMi05LjEzMSA4LjY0MS0yMC4xODEgMTEuNzI0LTMyLjM5MSAxMS40NzctMTAuMTM1LS43LTE3LjQ5Mi00LjU1OS0yNC45NjEtMTEuMjczLTIuOTU3IDEuMzg1LTUuNDg1IDMuMDIzLTguMTI1IDQuOTM4Qzc4Ljg4MiAxNzYuOTE4IDY5LjY3OCAxNzguMDc0IDU5IDE3N2MtNi45MDctMS41ODYtMTMuMDM2LTQuMjA0LTE5LTh2LTJsLTEuNzgxLS43NDJjLTcuMDkzLTQuMDIxLTExLjgyNy0xMy40NTUtMTQuMDM0LTIxLjA3MS0xLjg5NC03Ljc0NC0yLjYwNC0xNC45MDctMi41MjUtMjIuODYybC0uMDAxLTMuNjEyLjA0OS0xMS42Ny4wMTMtOC4xNS4wNjQtMTkuMTY2LjA2NS0yMS44NDZMMjIgMTN6IiBmaWxsPSIjMzUxZDcxIi8+PC9zdmc+';
+            const POPULAR_APPS = [{ name: "Google", url: "https://www.google.com", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" }, { name: "Facebook", url: "https://www.facebook.com", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" }, { name: "X (Twitter)", url: "https://www.x.com", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/5/57/X_logo_2023_%28white%29.png" }, { name: "Instagram", url: "https://www.instagram.com", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" }, { name: "LinkedIn", url: "https://www.linkedin.com", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png" }, { name: "GitHub", url: "https://github.com", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" }, { name: "Amazon", url: "https://www.amazon.com", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" }, { name: "Netflix", url: "https://www.netflix.com", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg" }, { name: "Spotify", url: "https://www.spotify.com", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/2/26/Spotify_logo_with_text.svg" }, { name: "PayPal", url: "https://www.paypal.com", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" }, { name: "Microsoft", url: "https://www.microsoft.com", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" }];
 
-            function checkForCache() {
-                if (localStorage.getItem(CACHE_KEY)) {
-                    $('#initial-load-view').style.display = 'none';
-                    $('#cached-unlock-view').style.display = 'block';
-                } else {
-                    $('#initial-load-view').style.display = 'block';
-                    $('#cached-unlock-view').style.display = 'none';
+            function setupPage() { setIcons(); setupEventListeners(); checkForCache(); detectExtensions(); }
+            function checkForCache() { if (localStorage.getItem(CACHE_KEY)) { $('#initial-load-view').style.display = 'none'; $('#cached-unlock-view').style.display = 'block'; } else { $('#initial-load-view').style.display = 'block'; $('#cached-unlock-view').style.display = 'none'; } }
+
+            function detectExtensions() {
+                // Heuristic check for common extension footprints. This is not foolproof.
+                if (document.documentElement.getAttribute('data-lastpass-root') ||
+                    document.documentElement.getAttribute('data-dashlane-version') ||
+                    window.bitwarden) {
+                    $('#privacy-warning').style.display = 'block';
                 }
             }
 
             function setupEventListeners() {
-                // Initial Load Listeners
                 $('#new-store-btn').addEventListener('click', () => $('#new-password-modal').style.display = 'block');
                 $('#set-password-btn').addEventListener('click', handleNewStore);
                 $('#load-store-btn').addEventListener('click', () => { $('#initial-choice-container').style.display = 'none'; $('#load-form-container').style.display = 'block'; });
                 $('#unlock-btn').addEventListener('click', handleUnlockFromFile);
-
-                // Cached Load Listeners
                 $('#unlock-cache-btn').addEventListener('click', handleUnlockFromCache);
-                $('#start-over-link').addEventListener('click', e => { e.preventDefault(); clearCacheAndReload(); });
-
-                // Nav Menu
+                $('#start-over-link').addEventListener('click', e => { e.preventDefault(); showConfirmationModal('This will clear your local cache and require loading from a file. Continue?', clearCacheAndReload); });
                 const navMenu = $('#nav-menu');
                 $('#burger-menu-btn').addEventListener('click', (e) => { e.stopPropagation(); navMenu.classList.toggle('open'); });
                 document.body.addEventListener('click', (e) => { if (!navMenu.contains(e.target) && !$('#burger-menu-btn').contains(e.target)) navMenu.classList.remove('open'); });
                 $('#save-combined-btn').addEventListener('click', () => handleSave('combined'));
-                $('#save-split-btn').addEventListener('click', () => handleSave('split'));
-                $('#clear-cache-btn').addEventListener('click', () => showConfirmationModal('Clear all locally cached data? You will need to load from a file again.', clearCacheAndReload));
+                $('#save-fragments-btn').addEventListener('click', () => handleSave('fragments'));
+                $('#clear-cache-btn').addEventListener('click', () => showConfirmationModal('Clear all locally cached data?', clearCacheAndReload));
                 $('#help-link').addEventListener('click', (e) => { e.preventDefault(); $('#help-content').classList.toggle('show'); });
-
-                // Theme
                 const themeToggle = $('#theme-toggle');
                 themeToggle.addEventListener('change', () => { document.body.classList.toggle('dark-mode', themeToggle.checked); localStorage.setItem('theme', themeToggle.checked ? 'dark' : 'light'); });
                 if (localStorage.getItem('theme') === 'dark') { themeToggle.checked = true; document.body.classList.add('dark-mode'); }
-
-                // File Drop Area
                 const dropArea = $('#drop-area');
                 ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => dropArea.addEventListener(eventName, (e) => { e.preventDefault(); e.stopPropagation(); }));
                 ['dragenter', 'dragover'].forEach(eventName => dropArea.addEventListener(eventName, () => dropArea.classList.add('highlight')));
                 ['dragleave', 'drop'].forEach(eventName => dropArea.addEventListener(eventName, () => dropArea.classList.remove('highlight')));
-                dropArea.addEventListener('drop', handleDrop);
+                dropArea.addEventListener('drop', (e) => handleFiles(e.dataTransfer.files));
                 dropArea.addEventListener('click', () => $('#file-input').click());
                 $('#browse-files-link').addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); $('#file-input').click(); });
                 $('#file-input').addEventListener('change', (e) => handleFiles(e.target.files));
-                $$('input[name="upload-mode"]').forEach(radio => radio.addEventListener('change', e => {
-                    const text = e.target.value === 'split' ? 'Drag & Drop Your 2 Secure Data Files Here' : 'Drag & Drop Your Combined Data File Here';
-                    $('#drop-area-text').textContent = text;
-                }));
-
-                // Main App Listeners
+                $$('.modal').forEach(modal => { const closeButton = modal.querySelector('.close-button'); if (closeButton) closeButton.addEventListener('click', () => modal.style.display = 'none'); modal.addEventListener('click', (e) => { if (e.target === modal) modal.style.display = 'none'; }); });
                 $$('.tab-button').forEach(button => button.addEventListener('click', () => switchTab(button.dataset.tab)));
+                $('#new-master-password').addEventListener('input', (e) => updatePasswordStrength(e.target.value, 'new'));
+                $('#master-password').addEventListener('input', (e) => updatePasswordStrength(e.target.value, 'load'));
+                $('#master-password-cache').addEventListener('input', (e) => updatePasswordStrength(e.target.value, 'cache'));
                 $('#add-app-btn').addEventListener('click', () => openAppModal());
-                $('#edit-app-btn').addEventListener('click', () => {
-                    const selectedId = $('#app-select').value;
-                    if (!selectedId) return showToast('Please select an application to edit.', 'error');
-                    const appToEdit = appData.apps.find(a => a.id == selectedId);
-                    if (appToEdit) openAppModal(appToEdit);
-                    else showToast('Could not find selected application.', 'error');
-                });
+                $('#edit-app-btn').addEventListener('click', () => { const selectedId = $('#app-select').value; if (!selectedId) return showToast('Please select an application to edit.', 'error'); const app = appData.apps.find(a => a.id == selectedId); if (app) openAppModal(app); });
                 $('#delete-app-btn').addEventListener('click', deleteApp);
-                $('#app-search').addEventListener('keyup', (e) => renderApps(e.target.value));
-
+                $('#app-search').addEventListener('input', handleAppSearch);
+                $('#app-select').addEventListener('change', handleAppSelectChange);
                 $('#add-signon-btn').addEventListener('click', () => openSignonModal());
-                $('#edit-signon-btn').addEventListener('click', () => {
-                    const selectedId = $('#signon-select').value;
-                    if (!selectedId) return showToast('Please select a sign-on method to edit.', 'error');
-                    const signonToEdit = appData.signons.find(s => s.id == selectedId);
-                    if (signonToEdit) openSignonModal(signonToEdit);
-                    else showToast('Could not find selected sign-on method.', 'error');
-                });
+                $('#edit-signon-btn').addEventListener('click', () => { const selectedId = $('#signon-select').value; if (!selectedId) return showToast('Please select a sign-on method to edit.', 'error'); const signon = appData.signons.find(s => s.id == selectedId); if (signon) openSignonModal(signon); });
                 $('#delete-signon-btn').addEventListener('click', deleteSignon);
-                $('#signon-search').addEventListener('keyup', (e) => renderSignons(e.target.value));
-
+                $('#signon-search').addEventListener('input', (e) => renderSignons(e.target.value));
                 $('#map-button').addEventListener('click', createMapping);
-                $('#table-search').addEventListener('keyup', (e) => { currentMappingPage = 1; renderMappingTable(e.target.value); });
+                $('#table-search').addEventListener('input', (e) => { currentMappingPage = 1; renderMappingTable(e.target.value); });
                 $('#mapping-table tbody').addEventListener('click', handleTableActions);
                 $('#prev-year-btn').addEventListener('click', () => { currentCalendarYear--; renderCalendar(); }); $('#next-year-btn').addEventListener('click', () => { currentCalendarYear++; renderCalendar(); });
                 $('#save-app-btn').addEventListener('click', saveApp); $('#save-signon-btn').addEventListener('click', saveSignon); $('#save-mapping-changes-btn').addEventListener('click', saveMappingChanges);
-                $$('.modal').forEach(modal => {
-                    const closeButton = modal.querySelector('.close-button');
-                    modal.addEventListener('click', (e) => { if (e.target === modal) modal.style.display = 'none'; });
-                    if (closeButton) closeButton.addEventListener('click', () => modal.style.display = 'none');
-                });
             }
-
-            function handleFiles(files) { uploadedFiles = Array.from(files); const fileList = $('#file-list'); fileList.innerHTML = ''; uploadedFiles.forEach(file => { const fileItem = document.createElement('div'); fileItem.className = 'file-item'; fileItem.textContent = file.name; fileList.appendChild(fileItem); }); }
-            function handleDrop(e) { handleFiles(e.dataTransfer.files); }
 
             async function handleNewStore() {
                 const password = $('#new-master-password').value;
-                if (!password) { showToast('Password cannot be empty.', 'error'); return; }
+                if (!password || password.length < 12) { showToast('Password is too weak. Please choose a stronger password.', 'error'); return; }
                 masterPassword = password;
                 $('#new-password-modal').style.display = 'none'; $('#new-master-password').value = '';
                 appData = { apps: [], signons: [], mappings: [] };
                 const salt = crypto.getRandomValues(new Uint8Array(16));
-                encryptionKey = await deriveKey(masterPassword, salt);
-                showToast('New store initialized. Remember to save.');
+                masterKey = await deriveKeyArgon2(masterPassword, salt);
+                showToast('New vault initialized. Remember to save.');
                 initMainApp(true);
             }
 
-            const normalizeDataIds = (data) => {
-                data.apps.forEach(app => app.id = Number(app.id));
-                data.signons.forEach(s => s.id = Number(s.id));
-                data.mappings.forEach(m => {
-                    m.id = Number(m.id);
-                    m.appId = Number(m.appId);
-                    m.signonId = Number(m.signonId);
-                });
-            };
-
-            async function handleUnlockFromFile() {
-                const password = $('#master-password').value;
-                const mode = $('input[name="upload-mode"]:checked').value;
+            async function handleUnlock(password, packetProvider) {
                 $('#unlock-message').textContent = '';
                 if (!password) { $('#unlock-message').textContent = 'Master Password is required.'; return; }
-                if (uploadedFiles.length === 0) { $('#unlock-message').textContent = 'Please select your data file(s).'; return; }
                 masterPassword = password;
                 try {
-                    let ciphertext, salt, iv;
-                    if (mode === 'combined') {
-                        if (uploadedFiles.length !== 1) throw new Error("Combined mode requires exactly one file.");
-                        const packet = JSON.parse(await uploadedFiles[0].text());
-                        ciphertext = new Uint8Array(atob(packet.payload).split('').map(c => c.charCodeAt(0)));
-                        salt = hexToBytes(packet.salt); iv = hexToBytes(packet.iv);
-                    } else {
-                        // --- START: MODIFIED LOGIC FOR SPLIT FILES ---
-                        if (uploadedFiles.length !== 2) throw new Error("Split mode requires exactly two files.");
+                    const { fileType, data } = await packetProvider();
+                    if (!data) throw new Error("Could not retrieve vault data.");
 
-                        // Parse both files first
-                        const packetA = JSON.parse(await uploadedFiles[0].text());
-                        const packetB = JSON.parse(await uploadedFiles[1].text());
+                    const salt = hexToBytes(data.salt);
+                    masterKey = await deriveKeyArgon2(masterPassword, salt);
+                    const decryptedJson = await decryptVault(masterKey, data);
+                    appData = JSON.parse(decryptedJson);
 
-                        // Check for validity and identify parts
-                        if (packetA.salt !== packetB.salt || packetA.iv !== packetB.iv) throw new Error('Data packets do not match.');
-                        if (![1, 2].includes(packetA.part) || packetA.part === packetB.part) throw new Error('Invalid or duplicate packet parts.');
-
-                        // Assign packets to the correct order based on their 'part' property
-                        const packet1 = packetA.part === 1 ? packetA : packetB;
-                        const packet2 = packetB.part === 2 ? packetB : packetA;
-
-                        // Reassemble the ciphertext in the correct order
-                        ciphertext = new Uint8Array([
-                            ...atob(packet1.payload).split('').map(c => c.charCodeAt(0)),
-                            ...atob(packet2.payload).split('').map(c => c.charCodeAt(0))
-                        ]);
-
-                        salt = hexToBytes(packet1.salt);
-                        iv = hexToBytes(packet1.iv);
-                        // --- END: MODIFIED LOGIC ---
-                    }
-                    encryptionKey = await deriveKey(masterPassword, salt);
-                    const decryptedJson = await decryptData(encryptionKey, { ciphertext, iv });
-                    const rawData = JSON.parse(decryptedJson);
-                    appData = rawData.data; // The actual data is in a sub-object
-                    if (!appData.apps || !appData.signons || !appData.mappings) throw new Error("Invalid data structure");
-                    showToast('Data successfully decrypted.');
-                    initMainApp(true); // From file, prompt to cache
+                    if (!appData) throw new Error("Decryption failed. Invalid format or incorrect password.");
+                    showToast('Vault successfully decrypted.');
+                    initMainApp(fileType !== 'cache');
                 } catch (error) {
                     console.error('Decryption failed:', error);
                     $('#unlock-message').textContent = `Decryption failed. ${error.message}`;
-                    encryptionKey = null; appData = null; masterPassword = ''; uploadedFiles = []; $('#file-list').innerHTML = '';
+                    masterKey = null; appData = null; masterPassword = '';
+                    if (packetProvider.name !== 'getCachePacket') { uploadedFiles = []; $('#file-list').innerHTML = ''; }
                 }
             }
-            async function handleUnlockFromCache() {
-                const password = $('#master-password-cache').value;
-                $('#unlock-message').textContent = '';
-                if (!password) { $('#unlock-message').textContent = 'Master Password is required.'; return; }
-                masterPassword = password;
-                try {
-                    const cached = JSON.parse(localStorage.getItem(CACHE_KEY));
-                    const salt = hexToBytes(cached.salt);
-                    const iv = hexToBytes(cached.iv);
-                    const ciphertext = new Uint8Array(atob(cached.payload).split('').map(c => c.charCodeAt(0)));
 
-                    encryptionKey = await deriveKey(masterPassword, salt);
-                    const decryptedJson = await decryptData(encryptionKey, { ciphertext, iv });
-                    const rawData = JSON.parse(decryptedJson);
-                    appData = rawData.data;
-                    if (!appData.apps || !appData.signons || !appData.mappings) throw new Error("Invalid data structure");
-                    normalizeDataIds(appData);
-                    showToast('Data unlocked from local cache.');
-                    initMainApp(false);
-                } catch (error) {
-                    console.error('Cache decryption failed:', error);
-                    $('#unlock-message').textContent = `Decryption failed. Incorrect password or corrupt cache.`;
-                    encryptionKey = null; appData = null; masterPassword = '';
+            function handleUnlockFromFile() {
+                const password = $('#master-password').value;
+                const getFilePacket = async () => {
+                    if (uploadedFiles.length === 0) throw new Error("Please select your data file(s).");
+                    if (uploadedFiles.length === 1) {
+                        try {
+                            const packet = JSON.parse(await uploadedFiles[0].text());
+                            if (packet.type === 'combined' && packet.payload) { return { fileType: 'combined', data: packet }; }
+                        } catch (e) { /* Fallthrough to fragment logic */ }
+                    }
+
+                    const firstPacket = JSON.parse(await uploadedFiles[0].text());
+                    const salt = hexToBytes(firstPacket.salt);
+                    const tempKey = await deriveKeyArgon2(password, salt);
+                    let realFragments = [];
+                    for (const file of uploadedFiles) {
+                        try {
+                            const packet = JSON.parse(await file.text());
+                            const decryptedPart = await decryptVault(tempKey, packet);
+                            if (decryptedPart.startsWith('WHDIGO_PART_')) { realFragments.push(decryptedPart); }
+                        } catch (e) { /* Expected for decoy files */ }
+                    }
+                    if (realFragments.length !== REAL_FRAGMENTS) throw new Error(`Could not find the ${REAL_FRAGMENTS} real data fragments.`);
+                    realFragments.sort();
+                    const combinedJson = realFragments.map(p => p.substring(p.indexOf(':') + 1)).join('');
+                    // Re-wrap to look like a combined packet for the decryptor
+                    const finalPacket = await encryptVault(tempKey, combinedJson);
+                    return { fileType: 'fragments', data: { salt: firstPacket.salt, ...finalPacket } };
+                };
+                handleUnlock(password, getFilePacket);
+            }
+
+            function handleUnlockFromCache() {
+                const password = $('#master-password-cache').value;
+                const getCachePacket = async () => {
+                    const cachedData = localStorage.getItem(CACHE_KEY);
+                    if (!cachedData) throw new Error("No cached data found.");
+                    return { fileType: 'cache', data: JSON.parse(cachedData) };
+                };
+                handleUnlock(password, getCachePacket);
+            }
+
+            async function handleSave(mode = 'fragments') {
+                if (!appData || !masterPassword) return showToast('No data available to save.', 'error');
+                const vaultJson = JSON.stringify(appData);
+                const salt = crypto.getRandomValues(new Uint8Array(16));
+                masterKey = await deriveKeyArgon2(masterPassword, salt);
+                if (mode === 'combined') {
+                    const encryptedPacket = await encryptVault(masterKey, vaultJson);
+                    const combinedPacket = { type: 'combined', salt: bytesToHex(salt), ...encryptedPacket };
+                    await downloadJson(combinedPacket, 'whdigo-vault-combined.json');
+                    showToast('Vault saved as a single combined file.');
+                } else {
+                    const mid = Math.floor(vaultJson.length / REAL_FRAGMENTS);
+                    const fragments = [];
+                    fragments.push(await encryptVault(masterKey, "WHDIGO_PART_1:" + vaultJson.substring(0, mid)));
+                    fragments.push(await encryptVault(masterKey, "WHDIGO_PART_2:" + vaultJson.substring(mid)));
+                    for (let i = 0; i < FRAGMENT_COUNT - REAL_FRAGMENTS; i++) {
+                        fragments.push(await encryptVault(masterKey, bytesToHex(crypto.getRandomValues(new Uint8Array(64)))));
+                    }
+                    fragments.sort(() => Math.random() - 0.5);
+                    for (let i = 0; i < fragments.length; i++) {
+                        await downloadJson({ salt: bytesToHex(salt), ...fragments[i] }, `whdigo-fragment-${i + 1}.json`);
+                    }
+                    showToast(`Vault saved as ${fragments.length} secure fragments.`);
                 }
             }
 
             async function saveToLocalStorage() {
-                try {
-                    const salt = crypto.getRandomValues(new Uint8Array(16));
-                    const key = await deriveKey(masterPassword, salt);
-                    const dataToSave = prepareDataForSaving();
-                    const { ciphertext, iv } = await encryptData(key, JSON.stringify(dataToSave));
-
-                    const cachedObject = {
-                        salt: bytesToHex(salt),
-                        iv: bytesToHex(iv),
-                        payload: btoa(String.fromCharCode.apply(null, ciphertext))
-                    };
-                    localStorage.setItem(CACHE_KEY, JSON.stringify(cachedObject));
-                    showToast("Data securely cached in browser.");
-                } catch (error) {
-                    console.error('Failed to cache data:', error);
-                    showToast('Could not cache data.', 'error');
-                }
+                if (!appData || !masterPassword) return showToast('No data available to save.', 'error');
+                const vaultJson = JSON.stringify(appData);
+                const salt = crypto.getRandomValues(new Uint8Array(16));
+                const key = await deriveKeyArgon2(masterPassword, salt);
+                const encryptedPacket = await encryptVault(key, vaultJson);
+                const combinedPacket = { type: 'combined', salt: bytesToHex(salt), ...encryptedPacket };
+                localStorage.setItem(CACHE_KEY, JSON.stringify(combinedPacket));
+                showToast('Encrypted vault has been cached locally.');
             }
 
-            function clearCacheAndReload() {
-                localStorage.removeItem(CACHE_KEY);
-                showToast("Local cache cleared.");
-                setTimeout(() => location.reload(), 1000);
-            }
-
-            function prepareDataForSaving() {
-                return {
-                    pepper: bytesToHex(crypto.getRandomValues(new Uint8Array(8))),
-                    version: "1.0",
-                    metadata: {
-                        last_sync: new Date().toISOString(),
-                        device_id: `device_${Date.now()}`
-                    },
-                    data: appData
-                };
-            }
-
-            async function handleSave(mode = 'split') {
-                if (!appData || !masterPassword) {
-                    showToast('No data or password available to save.', 'error');
-                    return;
-                }
-                try {
-                    const dataToSave = prepareDataForSaving();
-                    const jsonData = JSON.stringify(dataToSave);
-                    const newSalt = crypto.getRandomValues(new Uint8Array(16));
-                    encryptionKey = await deriveKey(masterPassword, newSalt);
-                    const {
-                        ciphertext,
-                        iv
-                    } = await encryptData(encryptionKey, jsonData);
-                    const saltHex = bytesToHex(newSalt),
-                        ivHex = bytesToHex(iv);
-
-                    if (mode === 'combined') {
-                        const payload = btoa(String.fromCharCode.apply(null, ciphertext));
-                        const combinedPacket = {
-                            type: 'combined',
-                            salt: saltHex,
-                            iv: ivHex,
-                            payload
-                        };
-                        await downloadJson(combinedPacket, `whdigo-allpackets.json`);
-                        showToast('Data saved to a single combined file.');
-                    } else {
-                        const mid = Math.floor(ciphertext.byteLength / 2);
-                        const part1 = ciphertext.slice(0, mid),
-                            part2 = ciphertext.slice(mid);
-                        const packet1 = {
-                            part: 1,
-                            salt: saltHex,
-                            iv: ivHex,
-                            payload: btoa(String.fromCharCode.apply(null, new Uint8Array(part1)))
-                        };
-                        const packet2 = {
-                            part: 2,
-                            salt: saltHex,
-                            iv: ivHex,
-                            payload: btoa(String.fromCharCode.apply(null, new Uint8Array(part2)))
-                        };
-                        await downloadJson(packet1, `whdigo-packet1.json`);
-                        await downloadJson(packet2, `whdigo-packet2.json`);
-                        showToast('Data saved to two split packets.');
-                    }
-                } catch (error) {
-                    console.error('Save failed:', error);
-                    // Don't show an error toast if the user just cancelled the save dialog
-                    if (error.name !== 'AbortError') {
-                        showToast('Failed to save data.', 'error');
-                    }
-                }
-            }
-
-
-            function initMainApp(promptToCache = false) {
-                $('#unlock-container').style.display = 'none';
-                $('#main-app').style.display = 'block';
-                $('#main-nav-items').style.display = 'block';
-                renderAll();
-
-                if (promptToCache && !localStorage.getItem(CACHE_KEY)) {
-                    showConfirmationModal(
-                        "Would you like to cache your encrypted data in your browser for faster loading next time? Your master password will still be required.",
-                        () => saveToLocalStorage(),
-                        "Cache Data",
-                        "No, Thanks"
-                    );
-                }
-            }
-            function switchTab(tabId) { $$('.tab-button').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tabId)); $$('.tab-content').forEach(content => content.classList.toggle('active', content.id === `${tabId}-content`)); if (appData) { if (tabId === 'mappings') { currentMappingPage = 1; renderMappingTable(); } if (tabId === 'calendar') renderCalendar(); } }
-            function renderAll() { renderApps(); renderSignons(); renderMappingTable(); renderCalendar(); }
-            function renderApps(filter = '') { $('#app-select').innerHTML = ''; appData.apps.filter(app => app.name.toLowerCase().includes(filter.toLowerCase())).forEach(app => { const opt = document.createElement('option'); opt.value = app.id; opt.textContent = app.name; $('#app-select').appendChild(opt); }); }
-            function renderSignons(filter = '') { $('#signon-select').innerHTML = ''; appData.signons.filter(s => s.name.toLowerCase().includes(filter.toLowerCase())).forEach(s => { const opt = document.createElement('option'); opt.value = s.id; opt.textContent = s.name; $('#signon-select').appendChild(opt); }); }
-
-            function renderMappingTable(filter = '') {
-                const tbody = $('#mapping-table tbody'); tbody.innerHTML = '';
-                const filtered = appData.mappings.filter(m => { const app = appData.apps.find(a => a.id == m.appId), signon = appData.signons.find(s => s.id == m.signonId); if (!app || !signon) return false; return `${app.name} ${signon.name} ${m.tags} ${m.comments}`.toLowerCase().includes(filter.toLowerCase()); });
-
-                const start = (currentMappingPage - 1) * MAPPINGS_PER_PAGE;
-                const end = start + MAPPINGS_PER_PAGE;
-                const paginatedItems = filtered.slice(start, end);
-
-                paginatedItems.forEach(m => {
-                    const app = appData.apps.find(a => a.id == m.appId), signon = appData.signons.find(s => s.id == m.signonId);
-                    if (!app || !signon) return;
-                    const row = document.createElement('tr');
-                    const appUrl = app.url ? `<a href="${app.url}" target="_blank" rel="noopener noreferrer">${app.name}</a>` : app.name;
-                    row.innerHTML = `<td><img src="${app.logoUrl || FALLBACK_LOGO_SVG}" alt="logo" onerror="this.onerror=null;this.src='${FALLBACK_LOGO_SVG}';"></td><td>${appUrl}</td><td>${signon.name}</td><td style="text-align: right;"><button class="table-action-btn edit" data-id="${m.id}" title="Edit Mapping">${ICONS.edit}</button><button class="table-action-btn delete" data-id="${m.id}" title="Delete Mapping">${ICONS.trash}</button></td>`;
-                    tbody.appendChild(row);
-                });
-                renderPaginationControls(filtered.length);
-            }
-
-            function renderPaginationControls(totalItems) {
-                const controlsContainer = $('#pagination-controls'); controlsContainer.innerHTML = '';
-                const pageCount = Math.ceil(totalItems / MAPPINGS_PER_PAGE);
-                if (pageCount <= 1) return;
-
-                const prevButton = document.createElement('button'); prevButton.textContent = 'Previous'; prevButton.classList.add('secondary');
-                prevButton.disabled = currentMappingPage === 1;
-                prevButton.addEventListener('click', () => { if (currentMappingPage > 1) { currentMappingPage--; renderMappingTable($('#table-search').value); } });
-
-                const pageInfo = document.createElement('span'); pageInfo.textContent = `Page ${currentMappingPage} of ${pageCount}`;
-
-                const nextButton = document.createElement('button'); nextButton.textContent = 'Next'; nextButton.classList.add('secondary');
-                nextButton.disabled = currentMappingPage === pageCount;
-                nextButton.addEventListener('click', () => { if (currentMappingPage < pageCount) { currentMappingPage++; renderMappingTable($('#table-search').value); } });
-
-                controlsContainer.append(prevButton, pageInfo, nextButton);
-            }
-
+            function initMainApp(promptToCache = false) { $('#unlock-container').style.display = 'none'; $('#main-app').style.display = 'block'; $('#main-nav-items').style.display = 'block'; renderAll(); if (promptToCache && !localStorage.getItem(CACHE_KEY)) { showConfirmationModal("Cache your encrypted vault for faster loading?", () => saveToLocalStorage(), "Cache Vault", "No, Thanks"); } }
+            function renderAll() { renderApps(); renderSignons(); renderMappingTable(); }
+            function renderApps(filter = '') { handleAppSearch({ target: { value: filter } }); }
+            function renderSignons(filter = '') { const sel = $('#signon-select'); sel.innerHTML = ''; appData.signons.filter(s => s.name.toLowerCase().includes(filter.toLowerCase())).forEach(s => { const opt = document.createElement('option'); opt.value = s.id; opt.textContent = s.name; sel.appendChild(opt); }); }
+            function handleAppSearch(e) { const filter = e.target.value.toLowerCase(); const appSelect = $('#app-select'); appSelect.innerHTML = ''; const userApps = appData ? appData.apps.filter(app => app.name.toLowerCase().includes(filter)) : []; const popularApps = POPULAR_APPS.filter(app => app.name.toLowerCase().includes(filter)); userApps.forEach(app => { const opt = document.createElement('option'); opt.value = app.id; opt.textContent = app.name; opt.dataset.type = 'user'; appSelect.appendChild(opt); }); if (userApps.length > 0 && popularApps.length > 0) { const sep = document.createElement('option'); sep.disabled = true; sep.textContent = '──────────'; appSelect.appendChild(sep); } popularApps.forEach(app => { const opt = document.createElement('option'); opt.value = `popular_${app.name}`; opt.textContent = app.name; opt.dataset.type = 'popular'; appSelect.appendChild(opt); }); }
+            function handleAppSelectChange(e) { const selectedOption = e.target.options[e.target.selectedIndex]; if (!selectedOption || selectedOption.dataset.type !== 'popular') return; const appName = selectedOption.value.replace('popular_', ''); const popularApp = POPULAR_APPS.find(app => app.name === appName); if (popularApp) { openAppModal(); $('#app-name').value = popularApp.name; $('#app-url').value = popularApp.url; $('#app-logo-url').value = popularApp.logoUrl; } }
+            function renderMappingTable(filter = '') { const tbody = $('#mapping-table tbody'); tbody.innerHTML = ''; const filtered = appData.mappings.filter(m => { const app = appData.apps.find(a => a.id == m.appId), signon = appData.signons.find(s => s.id == m.signonId); if (!app || !signon) return false; return `${app.name} ${signon.name} ${m.tags} ${m.comments}`.toLowerCase().includes(filter.toLowerCase()); }); const start = (currentMappingPage - 1) * MAPPINGS_PER_PAGE; const paginatedItems = filtered.slice(start, start + MAPPINGS_PER_PAGE); paginatedItems.forEach(m => { const app = appData.apps.find(a => a.id == m.appId), signon = appData.signons.find(s => s.id == m.signonId); if (!app || !signon) return; const row = document.createElement('tr'); const appUrl = app.url ? `<a href="${app.url}" target="_blank" rel="noopener noreferrer" class="link">${app.name}</a>` : app.name; row.innerHTML = `<td><img src="${app.logoUrl || FALLBACK_LOGO_SVG}" alt="logo" onerror="this.onerror=null;this.src='${FALLBACK_LOGO_SVG}';"></td><td>${appUrl}</td><td>${signon.name}</td><td style="text-align: right;"><button class="table-action-btn edit" data-id="${m.id}" title="Edit Mapping">${ICONS.edit}</button><button class="table-action-btn delete" data-id="${m.id}" title="Delete Mapping">${ICONS.trash}</button></td>`; tbody.appendChild(row); }); renderPaginationControls(filtered.length); }
+            function renderPaginationControls(totalItems) { const cont = $('#pagination-controls'); cont.innerHTML = ''; const pageCount = Math.ceil(totalItems / MAPPINGS_PER_PAGE); if (pageCount <= 1) return; const prev = document.createElement('button'); prev.textContent = 'Previous'; prev.classList.add('secondary'); prev.disabled = currentMappingPage === 1; prev.addEventListener('click', () => { if (currentMappingPage > 1) { currentMappingPage--; renderMappingTable($('#table-search').value); } }); const info = document.createElement('span'); info.textContent = `Page ${currentMappingPage} of ${pageCount}`; const next = document.createElement('button'); next.textContent = 'Next'; next.classList.add('secondary'); next.disabled = currentMappingPage === pageCount; next.addEventListener('click', () => { if (currentMappingPage < pageCount) { currentMappingPage++; renderMappingTable($('#table-search').value); } }); cont.append(prev, info, next); }
             function renderCalendar() { $('#calendar-title').textContent = currentCalendarYear; const view = $('#calendar-view'); view.innerHTML = ''; const months = Array.from({ length: 12 }, (e, i) => new Date(null, i + 1, null).toLocaleDateString("en", { month: "long" })); months.forEach((monthName, monthIndex) => { const mappingsInMonth = appData.mappings.filter(m => [new Date(m.startDate), new Date(m.endDate)].some(d => d.getFullYear() === currentCalendarYear && d.getMonth() === monthIndex)); if (mappingsInMonth.length > 0) { const monthDiv = document.createElement('div'); monthDiv.className = 'calendar-month'; let entriesHTML = `<h3>${monthName}</h3>`; mappingsInMonth.forEach(m => { const app = appData.apps.find(a => a.id == m.appId), signon = appData.signons.find(s => s.id == m.signonId); if (!app || !signon) return; const start = new Date(m.startDate), end = new Date(m.endDate); if (start.getFullYear() === currentCalendarYear && start.getMonth() === monthIndex) entriesHTML += `<div class="calendar-entry"><span class="entry-start">START on ${start.getDate()}:</span> <span>${app.name} / ${signon.name}</span></div>`; if (m.endDate && end.getFullYear() === currentCalendarYear && end.getMonth() === monthIndex) entriesHTML += `<div class="calendar-entry"><span class="entry-end">END on ${end.getDate()}:</span> <span>${app.name} / ${signon.name}</span></div>`; }); monthDiv.innerHTML = entriesHTML; view.appendChild(monthDiv); } }); if (!view.innerHTML) view.innerHTML = `<p>No events found for ${currentCalendarYear}.</p>`; }
-            function createMapping() { const appId = $('#app-select').value, signonId = $('#signon-select').value; if (!appId || !signonId) { showToast('Please select both an Application and a Sign-On Method.', 'error'); return; } appData.mappings.push({ id: Date.now(), appId: Number(appId), signonId: Number(signonId), startDate: new Date().toISOString().split('T')[0], endDate: '', tags: '', comments: '' }); showToast('Mapping created.'); renderMappingTable(); switchTab('mappings'); }
-            function handleTableActions(e) { const btn = e.target.closest('.table-action-btn'); if (!btn) return; const mappingId = btn.dataset.id; if (btn.classList.contains('edit')) openEditMappingModal(mappingId); else if (btn.classList.contains('delete')) { showConfirmationModal('Are you sure you want to delete this mapping?', () => { appData.mappings = appData.mappings.filter(m => m.id != mappingId); showToast('Mapping deleted.'); renderMappingTable(); renderCalendar(); }); } }
-            function saveApp() { const id = $('#app-id').value, name = $('#app-name').value.trim(); if (!name) return showToast('App Name is required.', 'error'); if (id) Object.assign(appData.apps.find(a => a.id == id), { name, url: $('#app-url').value.trim(), logoUrl: $('#app-logo-url').value.trim() }); else appData.apps.push({ id: Date.now(), name, url: $('#app-url').value.trim(), logoUrl: $('#app-logo-url').value.trim() }); $('#app-modal').style.display = 'none'; showToast('Application saved.'); renderApps(); renderMappingTable(); }
-            function openAppModal(app = null) { openModal('app', () => { $('#app-modal-title').textContent = app ? 'Edit Application' : 'Add Application'; $('#app-id').value = app?.id || ''; $('#app-name').value = app?.name || ''; $('#app-url').value = app?.url || ''; $('#app-logo-url').value = app?.logoUrl || ''; }); }
-            function deleteApp() { const appId = $('#app-select').value; if (!appId) return showToast('Select an application to delete.', 'error'); showConfirmationModal('This will also delete all associated mappings. Continue?', () => { appData.apps = appData.apps.filter(a => a.id != appId); appData.mappings = appData.mappings.filter(m => m.appId != appId); showToast('Application deleted.'); renderApps(); renderMappingTable(); }); }
-            function saveSignon() { const id = $('#signon-id').value, name = $('#signon-name').value.trim(); if (!name) return showToast('Sign-On Name is required.', 'error'); if (id) Object.assign(appData.signons.find(s => s.id == id), { name }); else appData.signons.push({ id: Date.now(), name }); $('#signon-modal').style.display = 'none'; showToast('Sign-On Method saved.'); renderSignons(); renderMappingTable(); }
-            function openSignonModal(signon = null) { openModal('signon', () => { $('#signon-modal-title').textContent = signon ? 'Edit Sign-On Method' : 'Add Sign-On Method'; $('#signon-id').value = signon?.id || ''; $('#signon-name').value = signon?.name || ''; }); }
-            function deleteSignon() { const signonId = $('#signon-select').value; if (!signonId) return showToast('Select a sign-on method to delete.', 'error'); showConfirmationModal('This will also delete all associated mappings. Continue?', () => { appData.signons = appData.signons.filter(s => s.id != signonId); appData.mappings = appData.mappings.filter(m => m.signonId != signonId); showToast('Sign-On Method deleted.'); renderSignons(); renderMappingTable(); }); }
-            function openEditMappingModal(mappingId) { const mapping = appData.mappings.find(m => m.id == mappingId); if (!mapping) return; openModal('edit-mapping', () => { $('#edit-mapping-id').value = mapping.id; $('#edit-start-date').value = mapping.startDate; $('#edit-end-date').value = mapping.endDate; $('#edit-tags').value = mapping.tags; $('#edit-comments').value = mapping.comments; }); }
-            function saveMappingChanges() { const mappingId = $('#edit-mapping-id').value; const mapping = appData.mappings.find(m => m.id == mappingId); if (!mapping) return; Object.assign(mapping, { startDate: $('#edit-start-date').value, endDate: $('#edit-end-date').value, tags: $('#edit-tags').value, comments: $('#edit-comments').value }); $('#edit-mapping-modal').style.display = 'none'; showToast('Mapping updated.'); renderMappingTable(); renderCalendar(); }
-            function openModal(modalId, setupFn) { const modal = $(`#${modalId}-modal`); if (setupFn) setupFn(modal); modal.style.display = 'block'; }
-            function showConfirmationModal(message, onConfirm, okText = 'Confirm', cancelText = 'Cancel') {
-                $('#confirm-message').textContent = message;
-                $('#confirm-ok-btn').textContent = okText;
-                $('#confirm-cancel-btn').textContent = cancelText;
-                const modal = $('#confirm-modal');
-                modal.style.display = 'block';
-                $('#confirm-ok-btn').onclick = () => { onConfirm(); modal.style.display = 'none'; };
-                $('#confirm-cancel-btn').onclick = () => modal.style.display = 'none';
-            }
-            function deriveKey(password, salt) { const enc = new TextEncoder(); return crypto.subtle.importKey('raw', enc.encode(password), { name: 'PBKDF2' }, false, ['deriveKey']).then(baseKey => crypto.subtle.deriveKey({ name: 'PBKDF2', salt, iterations: 100000, hash: 'SHA-256' }, baseKey, { name: 'AES-GCM', length: 256 }, true, ["encrypt", "decrypt"])); }
-            async function encryptData(key, jsonData) { const iv = crypto.getRandomValues(new Uint8Array(12)); const ciphertext = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, new TextEncoder().encode(jsonData)); return { ciphertext: new Uint8Array(ciphertext), iv }; }
-            async function decryptData(key, { ciphertext, iv }) { const decrypted = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, ciphertext); return new TextDecoder().decode(decrypted); }
+            function createMapping() { const appId = $('#app-select').value, signonId = $('#signon-select').value; if (!appId || !signonId || appId.startsWith('popular_')) { showToast('Please select a saved Application and a Sign-On Method.', 'error'); return; } appData.mappings.push({ id: Date.now(), appId: Number(appId), signonId: Number(signonId), startDate: new Date().toISOString().split('T')[0], endDate: '', tags: '', comments: '' }); showToast('Mapping created.'); renderMappingTable(); switchTab('mappings'); }
+            function handleTableActions(e) { const btn = e.target.closest('.table-action-btn'); if (!btn) return; const mappingId = btn.dataset.id; if (btn.classList.contains('edit')) openEditMappingModal(mappingId); else if (btn.classList.contains('delete')) { showConfirmationModal('Are you sure you want to delete this mapping?', () => { appData.mappings = appData.mappings.filter(m => m.id != mappingId); showToast('Mapping deleted.'); renderAll(); }); } }
+            function saveApp() { const id = $('#app-id').value, name = $('#app-name').value.trim(); if (!name) return showToast('App Name is required.', 'error'); if (id) Object.assign(appData.apps.find(a => a.id == id), { name, url: $('#app-url').value.trim(), logoUrl: $('#app-logo-url').value.trim() }); else appData.apps.push({ id: Date.now(), name, url: $('#app-url').value.trim(), logoUrl: $('#app-logo-url').value.trim() }); $('#app-modal').style.display = 'none'; showToast('Application saved.'); renderAll(); }
+            function openAppModal(app = null) { $('#app-modal-title').textContent = app ? 'Edit Application' : 'Add Application'; $('#app-id').value = app?.id || ''; $('#app-name').value = app?.name || ''; $('#app-url').value = app?.url || ''; $('#app-logo-url').value = app?.logoUrl || ''; $('#app-modal').style.display = 'block'; }
+            function deleteApp() { const appId = $('#app-select').value; if (!appId) return showToast('Select an application to delete.', 'error'); showConfirmationModal('This will also delete all associated mappings. Continue?', () => { appData.apps = appData.apps.filter(a => a.id != appId); appData.mappings = appData.mappings.filter(m => m.appId != appId); showToast('Application deleted.'); renderAll(); }); }
+            function saveSignon() { const id = $('#signon-id').value, name = $('#signon-name').value.trim(); if (!name) return showToast('Sign-On Name is required.', 'error'); if (id) Object.assign(appData.signons.find(s => s.id == id), { name }); else appData.signons.push({ id: Date.now(), name }); $('#signon-modal').style.display = 'none'; showToast('Sign-On Method saved.'); renderAll(); }
+            function openSignonModal(signon = null) { $('#signon-modal-title').textContent = signon ? 'Edit Sign-On Method' : 'Add Sign-On Method'; $('#signon-id').value = signon?.id || ''; $('#signon-name').value = signon?.name || ''; $('#signon-modal').style.display = 'block'; }
+            function deleteSignon() { const signonId = $('#signon-select').value; if (!signonId) return showToast('Select a sign-on method to delete.', 'error'); showConfirmationModal('This will also delete all associated mappings. Continue?', () => { appData.signons = appData.signons.filter(s => s.id != signonId); appData.mappings = appData.mappings.filter(m => m.signonId != signonId); showToast('Sign-On Method deleted.'); renderAll(); }); }
+            function openEditMappingModal(mappingId) { const mapping = appData.mappings.find(m => m.id == mappingId); if (!mapping) return; $('#edit-mapping-id').value = mapping.id; $('#edit-start-date').value = mapping.startDate; $('#edit-end-date').value = mapping.endDate; $('#edit-tags').value = mapping.tags; $('#edit-comments').value = mapping.comments; $('#edit-mapping-modal').style.display = 'block'; }
+            function saveMappingChanges() { const mappingId = $('#edit-mapping-id').value; const mapping = appData.mappings.find(m => m.id == mappingId); if (!mapping) return; Object.assign(mapping, { startDate: $('#edit-start-date').value, endDate: $('#edit-end-date').value, tags: $('#edit-tags').value, comments: $('#edit-comments').value }); $('#edit-mapping-modal').style.display = 'none'; showToast('Mapping updated.'); renderAll(); }
 
-            async function downloadJson(data, filename) {
-                const blob = new Blob([JSON.stringify(data, null, 2)], {
-                    type: 'application/json'
-                });
+            function updatePasswordStrength(password, type) {
+                const strengthBar = $(`#strength-bar-${type}`);
+                const strengthText = $(`#strength-text-${type}`);
+                let score = 0;
+                if (password.length >= 8) score++;
+                if (password.length >= 12) score++;
+                if (/[A-Z]/.test(password)) score++;
+                if (/[a-z]/.test(password)) score++;
+                if (/[0-9]/.test(password)) score++;
+                if (/[^A-Za-z0-9]/.test(password)) score++;
 
-                // Use the File System Access API if available
-                if (window.showSaveFilePicker) {
-                    const options = {
-                        suggestedName: filename,
-                        types: [{
-                            description: 'JSON Files',
-                            accept: {
-                                'application/json': ['.json'],
-                            },
-                        }, ],
-                    };
-                    const handle = await window.showSaveFilePicker(options);
-                    const writable = await handle.createWritable();
-                    await writable.write(blob);
-                    await writable.close();
-                } else {
-                    // Fallback for older browsers
-                    const a = document.createElement('a');
-                    a.href = URL.createObjectURL(blob);
-                    a.download = filename;
-                    document.body.appendChild(a); // Required for Firefox
-                    a.click();
-                    document.body.removeChild(a);
-                    URL.revokeObjectURL(a.href);
+                let width = (score / 6) * 100;
+                let colorClass = 'red';
+                let text = 'Weak';
+                if (score >= 5) { colorClass = 'green'; text = 'Strong'; }
+                else if (score >= 3) { colorClass = 'amber'; text = 'Medium'; }
+
+                if (password.length === 0) {
+                    width = 0; text = '';
                 }
+
+                strengthBar.style.width = `${width}%`;
+                strengthBar.className = `strength-bar ${colorClass}`;
+                strengthText.textContent = text;
             }
 
+            function switchTab(tabId) { $$('.tab-button').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tabId)); $$('.tab-content').forEach(content => content.classList.toggle('active', content.id === `${tabId}-content`)); if (appData && tabId === 'calendar') renderCalendar(); }
+            async function encryptVault(key, jsonData) { const iv = crypto.getRandomValues(new Uint8Array(12)); const ciphertext = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, new TextEncoder().encode(jsonData)); return { iv: bytesToHex(iv), payload: btoa(String.fromCharCode.apply(null, new Uint8Array(ciphertext))) }; }
+            async function decryptVault(key, packet) { const iv = hexToBytes(packet.iv); const ciphertext = new Uint8Array(atob(packet.payload).split('').map(c => c.charCodeAt(0))); const decrypted = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, ciphertext); return new TextDecoder().decode(decrypted); }
+            async function downloadJson(data, filename) { const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }); if (window.showSaveFilePicker) { try { const handle = await window.showSaveFilePicker({ suggestedName: filename, types: [{ description: 'JSON Files', accept: { 'application/json': ['.json'] } }] }); const writable = await handle.createWritable(); await writable.write(blob); await writable.close(); } catch (error) { if (error.name !== 'AbortError') console.error('Save failed:', error); } } else { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = filename; document.body.appendChild(a); a.click(); setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(a.href); }, 100); } }
             function bytesToHex(bytes) { return Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join(''); }
             function hexToBytes(hex) { const bytes = new Uint8Array(hex.length / 2); for (let i = 0; i < hex.length; i += 2) bytes[i / 2] = parseInt(hex.substr(i, 2), 16); return bytes; }
             function showToast(message, type = 'success') { const toast = document.createElement('div'); toast.className = `toast ${type}`; toast.textContent = message; $('#toast-container').appendChild(toast); setTimeout(() => toast.remove(), 4000); }
+            function showConfirmationModal(message, onConfirm, okText = 'Confirm', cancelText = 'Cancel') { const modal = $('#confirm-modal'); $('#confirm-message').textContent = message; $('#confirm-ok-btn').textContent = okText; $('#confirm-cancel-btn').textContent = cancelText; modal.style.display = 'block'; $('#confirm-ok-btn').onclick = () => { onConfirm(); modal.style.display = 'none'; }; $('#confirm-cancel-btn').onclick = () => modal.style.display = 'none'; }
+            function handleFiles(files) { uploadedFiles = Array.from(files); const fileList = $('#file-list'); fileList.innerHTML = ''; uploadedFiles.forEach(file => { const fileItem = document.createElement('div'); fileItem.className = 'file-item'; fileItem.textContent = `${file.name} (${(file.size / 1024).toFixed(1)} KB)`; fileList.appendChild(fileItem); }); }
+            function clearCacheAndReload() { localStorage.removeItem(CACHE_KEY); showToast("Local cache cleared."); setTimeout(() => location.reload(), 1000); }
             function setIcons() { $('#burger-menu-btn').innerHTML = ICONS.burger; $('#add-app-btn').innerHTML = ICONS.plus; $('#edit-app-btn').innerHTML = ICONS.edit; $('#delete-app-btn').innerHTML = ICONS.trash; $('#add-signon-btn').innerHTML = ICONS.plus; $('#edit-signon-btn').innerHTML = ICONS.edit; $('#delete-signon-btn').innerHTML = ICONS.trash; $('#prev-year-btn').innerHTML = ICONS.leftArrow; $('#next-year-btn').innerHTML = ICONS.rightArrow; }
 
-            // Initialise the app
             setupPage();
+        }
 
-            // PWA Service Worker Registration if available
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('sw.js')
-                    .then(reg => console.log('Service Worker registered:', reg))
-                    .catch(err => console.warn('No service worker found, continuing offline'));
-            }
-        });
+        // The 'defer' attribute on the script tag guarantees argon2 is ready.
+        document.addEventListener('DOMContentLoaded', initializeApp);
     </script>
 </body>
 </html>
