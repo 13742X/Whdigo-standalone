@@ -1,147 +1,131 @@
-# 🔐 WHDIGO Ultra Secure Password Manager
+# 🔐 WHDIGO Military Grade Encryption Vault
 
-**WHDIGO Ultra Secure Password Manager** is a completely **offline, browser-based password and credential manager**.  
-It is designed for **organizations, security-conscious individuals, and digital estate planning**, where credentials may need to be securely stored, encrypted, and passed to trusted custodians if the user is no longer available.
+**WHDIGO** is a zero-knowledge, 100% offline, Progressive Web App (PWA) designed for the ultra-secure storage of passwords, crypto keys, and other secrets.
+
+It is engineered for security professionals, organizations requiring offline credential repositories, and individuals planning for digital legacy and inheritance, where secrets must be stored with uncompromising security and distributed among trusted custodians.
 
 ---
 
-## 🧱 Core Concept
+## 🧱 Core Concept: Zero-Knowledge, Zero-Cloud, Zero-Trust
 
-Unlike cloud password managers, **WHDIGO** never connects to a server.  
-All encryption, decryption, and data management happen **entirely within your browser** — nothing is ever uploaded or transmitted.
+Unlike cloud-based managers, **WHDIGO never connects to a server**. All cryptographic operations—encryption, decryption, and key derivation—happen **entirely within your browser's secure environment**. Nothing is ever uploaded, transmitted, or logged.
 
-Data is encrypted using **AES-256-GCM** (industry-standard authenticated encryption), and your **master password** is never stored anywhere.  
+Data is protected by a military-grade cryptographic stack: **Argon2id** for key derivation and **AES-256-GCM** for authenticated encryption. Your master password is the only key and it is never stored.
 
 ---
 
 ## ⚙️ How It Works
 
-1. **Run the app locally** — simply open `WHDIGO Ultra Secure Password Manager.html` in any modern browser.  
-   No installation or backend required.
+1.  **Launch the App** — Open the PWA in any modern browser. It works instantly, even completely offline. No installation is required.
 
-2. **Create a new secure store** — choose a strong master password (it cannot be recovered if lost).
+2.  **Create a New Vault** — Choose a strong, memorable master password. This password is the only key to your vault and **cannot be recovered if lost**.
 
-3. **Add your credentials and mappings** — record applications, sign-on methods, tags, and notes.
+3.  **Store Your Secrets** — Add passwords, crypto keys, passkeys, documents, wallet seeds, or any other sensitive data.
 
-4. **Save your encrypted data:**
-   - **Combined file:** a single `.json` containing all encrypted data.  
-   - **Split packets:** two separate `.json` files, each holding half of the encrypted data.
+4.  **Save Your Encrypted Vault:**
+    *   **Combined File:** A single `.json` file containing the entire encrypted vault.
+    *   **Secure Fragments:** The vault is split, obfuscated, and saved as a pack of **6 separate `.json` files**. Only 2 of these files contain real data; the other 4 are encrypted decoys filled with random noise.
 
-   🔸 *For maximum security, distribute each split packet to a different custodian (e.g., lawyer, partner, IT officer).*
+    🔸 *For maximum security, distribute the 6 fragments across different locations or custodians (e.g., USB drive, family member, lawyer). An attacker cannot determine which files are real, exponentially increasing attack difficulty.*
 
-5. **To restore data**, both packets and the master password are required.  
-   The app can decrypt locally and display all information again.
-
-6. **Optional:** The encrypted data can be cached in the browser for convenience — still fully encrypted with your password.
+5.  **Restore Your Vault** — Simply drag and drop all 6 fragment files into the app and enter your master password to decrypt the vault locally.
 
 ---
 
 ## 🧩 Files Overview
 
-- **`WHDIGO Ultra Secure Password Manager.html`**  
-  The self-contained web app. Includes all logic, encryption routines, and UI. Works offline.
+WHDIGO is a modern Progressive Web App with a clean, self-contained structure.
 
-- **`sw.js` (optional)**  
-  Service Worker script for offline caching (optional if you serve as a PWA).  
-  Ensures the app loads instantly even without internet access.
+-   **`index.html`**
+    The main application file. It contains the UI and all client-side logic.
+
+-   **`sw.js` (Service Worker)**
+    Enables the robust offline PWA experience, caching all necessary assets so the app loads instantly with or without an internet connection.
+
+-   **`manifest.json`**
+    The PWA manifest file that allows the app to be "installed" on your device for a native-like experience.
+
+-   **`/libs/`**
+    Contains the local, self-hosted cryptographic libraries (`argon2.js`, `argon2.wasm`), loaded with SRI checks to guarantee their integrity.
 
 ---
 
-## 🔒 Security Design
+## 🔒 Security Architecture
 
 | Feature | Description |
-|----------|--------------|
-| **Encryption** | AES-256-GCM with PBKDF2 key derivation (100,000 iterations) |
-| **Password Handling** | Master password never leaves memory; not stored anywhere |
-| **In Memory Only** | Unless selected, no data is cached in cookies or localstorage|
-| **Data Model** | All data encrypted into JSON packets |
-| **Split File Mode** | Data is divided into two halves requiring both to decrypt |
-| **Offline Execution** | 100% client-side JavaScript; no network requests |
-| **Optional Cache** | Encrypted payload can be stored in localStorage |
-| **Integrity Protection** | Authenticated encryption prevents tampering |
+|--------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Key Derivation** | **Argon2id** (the gold standard) processes your master password. Its memory-hard properties make it extremely resistant to GPU/ASIC-based brute-force attacks. (`mem: 64MB`, `time: 2`, `parallelism: 1`) |
+| **Encryption** | **AES-256-GCM** provides military-grade authenticated encryption. This ensures data is both confidential and protected from tampering. A unique 96-bit IV is generated for each encryption session. |
+| **Secure Fragment Obfuscation** | The vault is split into 2 real fragments and hidden among 4 encrypted decoy fragments. All 6 files are cryptographically indistinguishable, making targeted attacks nearly impossible. |
+| **Code Integrity** | **Subresource Integrity (SRI)** with a `SHA-384` hash is used to verify the local Argon2 library. This guarantees the cryptographic code has not been modified or tampered with. |
+| **100% Offline Execution** | The app is a self-contained PWA. It makes **zero external network requests** for its core functionality. Your data never leaves your device. |
+| **Zero-Knowledge Principle** | Your master password and unencrypted data only ever exist in your browser's memory during an active session. We have no access and no ability to recover your data. |
+| **Optional Local Cache** | For convenience, the vault can be saved to the browser's `localStorage`. It remains fully encrypted with Argon2id + AES-256-GCM. |
 
 ---
 
 ## 🧭 Use Cases
 
-- **Organizational security:**  
-  Store internal credentials or API keys offline and distribute recovery packets across departments.
+-   **Organizational Security:**
+    Store critical internal credentials and distribute the 6 recovery fragments across different departments or key personnel.
 
-- **Digital legacy management:**  
-  Leave encrypted credentials accessible only to multiple trusted custodians upon your passing.
+-   **Digital Legacy & Inheritance:**
+    Ensure your digital assets are accessible to multiple trusted custodians only when all fragments are brought together.
 
-- **Isolated systems:**  
-  Use in air-gapped environments or secure networks where internet access is restricted.
+-   **Air-Gapped Environments:**
+    Perfect for use in secure networks, labs, or systems where internet access is restricted or forbidden.
 
 ---
 
 ## 🧰 Recommended Setup
 
-1. Place both `WHDIGO Ultra Secure Password Manager.html` and `sw.js` in the same folder.  
-2. Open the HTML file locally or host it on an internal network (no backend needed).  
-3. After setting up, use **“Save Split Packets”** to create:
-   - `whdigo-packet1.json`
-   - `whdigo-packet2.json`
-4. Store these files securely — each with a different custodian.
+1.  Host the application on a secure internal server or simply run it from your local files.
+2.  Use the "Install App" feature in your browser to create a desktop shortcut for easy offline access.
+3.  After setting up your vault, use **“Save as Secure Fragments”** to generate the 6 `.json` files.
+4.  Store these 6 files securely. For maximum protection, store them in different physical or digital locations.
 
 ---
 
 ## 🚫 No Cloud, No Sync, No Metadata
 
-- No external requests  
-- No telemetry  
-- No analytics  
-- No account system  
+-   No external analytics
+-   No telemetry or data collection
+-   No user accounts or registration
+-   No third-party trackers
 
-Your data is **yours alone**. The app never transmits, synchronizes, or exposes any information.
-
----
-
-## 🧠 Ideal For
-
-- Security professionals managing sensitive credentials  
-- Executors or custodians handling digital inheritance  
-- Organizations seeking offline credential repositories  
-- Anyone who prefers **full local control** over their secrets
+Your data is **yours and yours alone**.
 
 ---
 
 ## ⚠️ Important Notes
 
-- **Your master password cannot be recovered.**  
-  Losing it means permanent data loss.
+-   **Your master password is unrecoverable.**
+    If you forget it, your data is permanently lost. Write it down and store it securely.
 
-- **Both split files are required** to decrypt your data.  
-  A single file is useless without its pair.
+-   **All 6 fragments are required** to decrypt a vault saved in Secure Fragment mode.
+    Losing even one file may result in data loss.
 
-- Always verify the integrity of the app source (`WHDIGO Ultra Secure Password Manager.html`) before use.
+-   Always ensure you are running an authentic version of the application.
 
 ---
 
 ## 🪙 Credits
 
-Created as part of the **WHDIGO / Snard Token ecosystem** —  
+Created as part of the **WHDIGO / Snard Token ecosystem** —
 a suite of blockchain-anchored and privacy-focused security tools by **[Garlip.com](https://garlip.com)**.
-
----
-
-## 📝 License
-
-This project is released for **personal and organizational use**.  
-Modification and redistribution are permitted for non-commercial purposes, provided attribution is maintained.
 
 ---
 
 ### 🧭 Summary
 
 | Characteristic | Description |
-|----------------|-------------|
-| **Mode** | 100% Offline PWA |
-| **Encryption** | AES-256-GCM |
-| **Data Ownership** | Fully Local |
-| **Files to Keep** | `packet1.json` and `packet2.json` |
-| **Best For** | Security-critical storage, digital legacy planning |
+|----------------|-------------------------------------------------|
+| **Mode** | 100% Offline Progressive Web App (PWA) |
+| **Cryptography** | Argon2id + AES-256-GCM |
+| **Data Ownership** | Fully Local, Zero-Knowledge |
+| **Files to Keep** | A single `.json` file or a pack of 6 fragments |
+| **Best For** | Extreme security, digital inheritance, offline use |
 
 ---
 
-> “Two files. One password. Infinite security.”
+> “Six files. Four lies. One password. Unbreakable security.”
